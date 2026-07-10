@@ -1,0 +1,217 @@
+.calculator-modal {
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  border-radius: 28px;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  z-index: 1001;
+}
+
+.calculator-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.calc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(var(--accent-gold-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-gold-rgb), 0.3);
+  color: var(--accent-gold);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.sparkle-gold {
+  color: var(--accent-gold);
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+.calculator-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.calculator-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calc-group-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+/* Grid layout for project types cards */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.type-card {
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.type-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--accent-purple-rgb), 0.3);
+}
+
+.type-card.active {
+  background: rgba(var(--accent-purple-rgb), 0.08);
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 15px rgba(var(--accent-purple-rgb), 0.15);
+}
+
+[data-theme="dark"] .type-card.active {
+  background: rgba(var(--accent-purple-rgb), 0.15);
+}
+
+.card-icon {
+  color: var(--text-secondary);
+  transition: var(--transition-smooth);
+}
+
+.type-card.active .card-icon {
+  color: var(--accent-purple);
+  transform: scale(1.1);
+}
+
+/* Segmented tabs for scale & urgency selection */
+.scale-tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 4px;
+  border-radius: 12px;
+  gap: 4px;
+}
+
+.scale-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  text-align: center;
+}
+
+.scale-tab:hover {
+  color: var(--text-primary);
+}
+
+.scale-tab.active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-shadow: 0 4px 10px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Results box */
+.calc-results {
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px dashed var(--accent-gold);
+  background: rgba(var(--accent-gold-rgb), 0.02);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.result-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.result-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.result-icon.purple { color: var(--accent-purple); }
+.result-icon.gold { color: var(--accent-gold); }
+
+.result-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-val {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+}
+
+.calculator-footer {
+  margin-top: 25px;
+}
+
+@media (max-width: 600px) {
+  .calculator-modal {
+    padding: 30px 20px;
+  }
+  .type-grid {
+    grid-template-columns: 1fr;
+  }
+  .scale-tabs {
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .scale-tab {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    margin-bottom: 6px;
+  }
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}

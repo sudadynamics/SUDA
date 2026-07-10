@@ -1,0 +1,435 @@
+/* Showcase Section Styling */
+.showcase-section {
+  position: relative;
+  overflow: hidden;
+  padding: 100px 5% 80px;
+  background: relative;
+}
+
+.showcase-decor {
+  position: absolute;
+  top: -10%;
+  right: 5%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(var(--accent-purple-rgb), 0.15) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Admin Control Bar */
+.admin-control-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  margin-top: -30px;
+  margin-bottom: 40px;
+  padding: 12px 24px;
+  border-radius: 16px;
+  border: 1px dashed rgba(var(--accent-purple-rgb), 0.3);
+  background: rgba(var(--accent-purple-rgb), 0.03);
+}
+
+.admin-badge-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.admin-indicator-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-gold);
+  animation: pulseGlow 1.5s infinite ease-in-out;
+}
+
+.btn-admin-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--accent-purple), #9d4edd);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-admin-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(var(--accent-purple-rgb), 0.4);
+}
+
+.btn-admin-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 30px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-admin-logout:hover {
+  background: rgba(255, 77, 77, 0.1);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+/* Filter Buttons */
+.showcase-filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 50px;
+}
+
+.filter-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 10px 24px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+.filter-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-purple);
+  transform: translateY(-2px);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(var(--accent-purple-rgb), 0.3);
+}
+
+/* Grid Layout */
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* Showcase Card */
+.showcase-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 24px;
+  padding: 30px;
+  background: var(--card-bg);
+  transition: var(--transition-smooth);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  min-height: 380px;
+}
+
+.showcase-card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--accent-purple-rgb), 0.1), transparent 80%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.showcase-card:hover .showcase-card-glow {
+  opacity: 1;
+}
+
+/* Colors for Card Borders on Hover based on Categories */
+.card-hover-purple-gold:hover {
+  border-color: var(--accent-purple);
+  box-shadow: 0 10px 30px rgba(var(--accent-purple-rgb), 0.15);
+  transform: translateY(-8px);
+}
+
+.card-hover-turquoise-purple:hover {
+  border-color: var(--accent-turquoise);
+  box-shadow: 0 10px 30px rgba(var(--accent-turquoise-rgb), 0.15);
+  transform: translateY(-8px);
+}
+
+.card-hover-red-gold:hover {
+  border-color: var(--accent-red);
+  box-shadow: 0 10px 30px rgba(var(--accent-red-rgb), 0.15);
+  transform: translateY(-8px);
+}
+
+.card-hover-turquoise-gold:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 10px 30px rgba(var(--accent-gold-rgb), 0.15);
+  transform: translateY(-8px);
+}
+
+/* Card Header */
+.showcase-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  z-index: 2;
+}
+
+.showcase-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+/* Category Color Variations */
+.showcase-icon-box.purple-gold {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+}
+
+.showcase-icon-box.turquoise-purple {
+  background: linear-gradient(135deg, var(--accent-turquoise), var(--accent-purple));
+}
+
+.showcase-icon-box.red-gold {
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-gold));
+}
+
+.showcase-icon-box.turquoise-gold {
+  background: linear-gradient(135deg, var(--accent-turquoise), var(--accent-gold));
+}
+
+.showcase-category-tag {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  background: rgba(var(--text-secondary), 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Card Content */
+.showcase-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+  z-index: 2;
+}
+
+.showcase-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.showcase-card-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.showcase-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.showcase-tech-tag {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+/* Card Footer & Action Buttons */
+.showcase-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+  z-index: 2;
+}
+
+.btn-showcase-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--accent-purple);
+  transition: var(--transition-smooth);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-showcase-link:hover {
+  color: var(--accent-gold);
+  transform: translateX(4px);
+}
+
+.btn-showcase-link .arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.btn-showcase-link:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+/* Admin Actions Inside Card */
+.showcase-admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action-edit,
+.btn-action-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-action-edit:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: rgba(var(--accent-gold-rgb), 0.05);
+}
+
+.btn-action-delete:hover {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+  background: rgba(var(--accent-red-rgb), 0.05);
+}
+
+/* Empty State */
+.showcase-empty {
+  text-align: center;
+  padding: 60px 20px;
+  border: 2px dashed var(--border-color);
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.01);
+  color: var(--text-secondary);
+}
+
+.showcase-empty-icon {
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* Add Dotted Placeholder Card for Admins */
+.showcase-add-placeholder-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border-color);
+  border-radius: 24px;
+  background: rgba(var(--accent-purple-rgb), 0.01);
+  min-height: 380px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  color: var(--text-secondary);
+  gap: 15px;
+  padding: 30px;
+}
+
+.showcase-add-placeholder-card:hover {
+  border-color: var(--accent-purple);
+  background: rgba(var(--accent-purple-rgb), 0.03);
+  color: var(--accent-purple);
+  transform: translateY(-8px);
+}
+
+.showcase-add-plus-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.showcase-add-placeholder-card:hover .showcase-add-plus-icon {
+  border-color: var(--accent-purple);
+  background: rgba(var(--accent-purple-rgb), 0.1);
+  transform: scale(1.1);
+}
+
+.showcase-add-text {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 768px) {
+  .admin-control-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .showcase-grid {
+    grid-template-columns: 1fr;
+  }
+}
