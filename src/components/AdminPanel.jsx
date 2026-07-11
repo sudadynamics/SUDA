@@ -205,6 +205,34 @@ const AdminPanel = ({
           link: ''
         };
       }
+    } else if (type === 'testimonial') {
+      if (index !== null) {
+        const itemTr = localTr.testimonialsData[index];
+        const itemEn = localEn.testimonialsData[index];
+        initialData = {
+          id: itemTr.id,
+          name: itemTr.name,
+          stars: itemTr.stars || 5,
+          roleTr: itemTr.role,
+          roleEn: itemEn.role,
+          companyTr: itemTr.company,
+          companyEn: itemEn.company,
+          quoteTr: itemTr.quote,
+          quoteEn: itemEn.quote
+        };
+      } else {
+        initialData = {
+          id: Date.now(),
+          name: '',
+          stars: 5,
+          roleTr: '',
+          roleEn: '',
+          companyTr: '',
+          companyEn: '',
+          quoteTr: '',
+          quoteEn: ''
+        };
+      }
     }
 
     setEditingItem({ type, index, data: initialData });
@@ -330,6 +358,39 @@ const AdminPanel = ({
       setLocalProjects(updatedProjects);
       localStorage.setItem('suda_showcase_projects', JSON.stringify(updatedProjects));
       setProjectsVersion(prev => prev + 1);
+    } else if (type === 'testimonial') {
+      const updatedTr = { ...localTr };
+      const updatedEn = { ...localEn };
+
+      const testimonialTr = {
+        id: data.id,
+        name: data.name,
+        stars: parseInt(data.stars) || 5,
+        role: data.roleTr,
+        company: data.companyTr,
+        quote: data.quoteTr
+      };
+
+      const testimonialEn = {
+        id: data.id,
+        name: data.name,
+        stars: parseInt(data.stars) || 5,
+        role: data.roleEn,
+        company: data.companyEn,
+        quote: data.quoteEn
+      };
+
+      if (index !== null) {
+        updatedTr.testimonialsData[index] = testimonialTr;
+        updatedEn.testimonialsData[index] = testimonialEn;
+      } else {
+        if (!updatedTr.testimonialsData) updatedTr.testimonialsData = [];
+        if (!updatedEn.testimonialsData) updatedEn.testimonialsData = [];
+        updatedTr.testimonialsData.push(testimonialTr);
+        updatedEn.testimonialsData.push(testimonialEn);
+      }
+
+      saveTranslations(updatedTr, updatedEn);
     }
 
     setEditingItem(null);
@@ -365,6 +426,12 @@ const AdminPanel = ({
       setLocalProjects(updatedProjects);
       localStorage.setItem('suda_showcase_projects', JSON.stringify(updatedProjects));
       setProjectsVersion(prev => prev + 1);
+    } else if (type === 'testimonial') {
+      const updatedTr = { ...localTr };
+      const updatedEn = { ...localEn };
+      updatedTr.testimonialsData.splice(index, 1);
+      updatedEn.testimonialsData.splice(index, 1);
+      saveTranslations(updatedTr, updatedEn);
     }
   };
 
@@ -519,6 +586,13 @@ const AdminPanel = ({
             >
               <Phone size={16} />
               <span>İletişim & Sayılar</span>
+            </button>
+            <button 
+              className={`sidebar-tab-btn ${activeTab === 'testimonials' ? 'active' : ''}`}
+              onClick={() => setActiveTab('testimonials')}
+            >
+              <Sparkles size={16} />
+              <span>Müşteri Yorumları</span>
             </button>
           </aside>
 
@@ -960,6 +1034,69 @@ const AdminPanel = ({
               </form>
             )}
 
+            {/* TAB 7: TESTIMONIALS */}
+            {activeTab === 'testimonials' && (
+              <div className="tab-list-view">
+                <div className="workflow-whyus-editor card glass" style={{ padding: '20px', marginBottom: '30px' }}>
+                  <h5 className="sub-section-title" style={{ marginBottom: '15px', color: 'var(--accent-purple)' }}>Yorumlar Bölüm Başlığı</h5>
+                  <div className="form-translation-grid">
+                    <div className="lang-col">
+                      <span className="lang-indicator">Türkçe</span>
+                      <div className="form-field">
+                        <label>Bölüm Başlığı</label>
+                        <input type="text" value={localTr.testimonialsTitle || ''} onChange={e => saveTranslations({...localTr, testimonialsTitle: e.target.value}, localEn)} />
+                      </div>
+                      <div className="form-field">
+                        <label>Bölüm Açıklaması</label>
+                        <input type="text" value={localTr.testimonialsSubtitle || ''} onChange={e => saveTranslations({...localTr, testimonialsSubtitle: e.target.value}, localEn)} />
+                      </div>
+                    </div>
+                    <div className="lang-col">
+                      <span className="lang-indicator">English</span>
+                      <div className="form-field">
+                        <label>Section Title</label>
+                        <input type="text" value={localEn.testimonialsTitle || ''} onChange={e => saveTranslations(localTr, {...localEn, testimonialsTitle: e.target.value})} />
+                      </div>
+                      <div className="form-field">
+                        <label>Section Subtitle</label>
+                        <input type="text" value={localEn.testimonialsSubtitle || ''} onChange={e => saveTranslations(localTr, {...localEn, testimonialsSubtitle: e.target.value})} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="tab-list-header">
+                  <h4 className="tab-title-heading">Müşteri Yorumları ({localTr.testimonialsData?.length || 0})</h4>
+                  <button className="btn-add-item" type="button" onClick={() => openItemModal('testimonial')}>
+                    <Plus size={16} />
+                    <span>Yeni Yorum Ekle</span>
+                  </button>
+                </div>
+
+                <div className="crud-items-grid">
+                  {localTr.testimonialsData?.map((item, idx) => (
+                    <div key={item.id || idx} className="crud-item-card glass">
+                      <div className="crud-card-info">
+                        <span className="crud-card-badge">{item.stars} ⭐</span>
+                        <div>
+                          <h5 className="crud-card-name">{item.name}</h5>
+                          <p className="crud-card-sub">{item.company} - "{item.quote}"</p>
+                        </div>
+                      </div>
+                      <div className="crud-card-actions">
+                        <button className="btn-crud-edit" type="button" onClick={() => openItemModal('testimonial', idx)}>
+                          <Edit2 size={14} />
+                        </button>
+                        <button className="btn-crud-delete" type="button" onClick={() => handleDeleteItem('testimonial', idx)}>
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
@@ -1386,6 +1523,122 @@ const AdminPanel = ({
                             onChange={e => setEditingItem({
                               ...editingItem,
                               data: { ...editingItem.data, descEn: e.target.value }
+                            })}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                {/* 5. TESTIMONIAL EDITOR FIELDS */}
+                {editingItem.type === 'testimonial' && (
+                  <>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                      <div className="form-field">
+                        <label>Müşteri Adı Soyadı</label>
+                        <input 
+                          type="text" 
+                          required
+                          value={editingItem.data.name} 
+                          onChange={e => setEditingItem({
+                            ...editingItem,
+                            data: { ...editingItem.data, name: e.target.value }
+                          })}
+                        />
+                      </div>
+                      <div className="form-field">
+                        <label>Yıldız Puanı (1-5)</label>
+                        <select 
+                          value={editingItem.data.stars} 
+                          onChange={e => setEditingItem({
+                            ...editingItem,
+                            data: { ...editingItem.data, stars: parseInt(e.target.value) || 5 }
+                          })}
+                        >
+                          <option value="5">5 Yıldız ⭐⭐⭐⭐⭐</option>
+                          <option value="4">4 Yıldız ⭐⭐⭐⭐</option>
+                          <option value="3">3 Yıldız ⭐⭐⭐</option>
+                          <option value="2">2 Yıldız ⭐⭐</option>
+                          <option value="1">1 Yıldız ⭐</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="form-translation-grid">
+                      <div className="lang-col">
+                        <span className="lang-indicator">Türkçe</span>
+                        <div className="form-field">
+                          <label>Görevi / Rolü (TR)</label>
+                          <input 
+                            type="text" 
+                            required
+                            value={editingItem.data.roleTr} 
+                            onChange={e => setEditingItem({
+                              ...editingItem,
+                              data: { ...editingItem.data, roleTr: e.target.value }
+                            })}
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Şirket Adı (TR)</label>
+                          <input 
+                            type="text" 
+                            required
+                            value={editingItem.data.companyTr} 
+                            onChange={e => setEditingItem({
+                              ...editingItem,
+                              data: { ...editingItem.data, companyTr: e.target.value }
+                            })}
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Yorum Metni (TR)</label>
+                          <textarea 
+                            rows="3" 
+                            required
+                            value={editingItem.data.quoteTr} 
+                            onChange={e => setEditingItem({
+                              ...editingItem,
+                              data: { ...editingItem.data, quoteTr: e.target.value }
+                            })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="lang-col">
+                        <span className="lang-indicator">English</span>
+                        <div className="form-field">
+                          <label>Role / Position (EN)</label>
+                          <input 
+                            type="text" 
+                            required
+                            value={editingItem.data.roleEn} 
+                            onChange={e => setEditingItem({
+                              ...editingItem,
+                              data: { ...editingItem.data, roleEn: e.target.value }
+                            })}
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Company Name (EN)</label>
+                          <input 
+                            type="text" 
+                            required
+                            value={editingItem.data.companyEn} 
+                            onChange={e => setEditingItem({
+                              ...editingItem,
+                              data: { ...editingItem.data, companyEn: e.target.value }
+                            })}
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Review Quote (EN)</label>
+                          <textarea 
+                            rows="3" 
+                            required
+                            value={editingItem.data.quoteEn} 
+                            onChange={e => setEditingItem({
+                              ...editingItem,
+                              data: { ...editingItem.data, quoteEn: e.target.value }
                             })}
                           />
                         </div>

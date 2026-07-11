@@ -10,6 +10,8 @@ import ContactPopup from './components/ContactPopup';
 import CostCalculator from './components/CostCalculator';
 import Workflow from './components/Workflow';
 import AdminPanel from './components/AdminPanel';
+import Testimonials from './components/Testimonials';
+import AIChatbot from './components/AIChatbot';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -19,7 +21,19 @@ function App() {
     const stored = localStorage.getItem('suda_translations');
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        // Defensively merge newly added testimonials keys
+        if (parsed.tr && !parsed.tr.testimonialsData) {
+          parsed.tr.testimonialsTitle = translations.tr.testimonialsTitle;
+          parsed.tr.testimonialsSubtitle = translations.tr.testimonialsSubtitle;
+          parsed.tr.testimonialsData = translations.tr.testimonialsData;
+        }
+        if (parsed.en && !parsed.en.testimonialsData) {
+          parsed.en.testimonialsTitle = translations.en.testimonialsTitle;
+          parsed.en.testimonialsSubtitle = translations.en.testimonialsSubtitle;
+          parsed.en.testimonialsData = translations.en.testimonialsData;
+        }
+        return parsed;
       } catch (e) {
         return translations;
       }
@@ -158,6 +172,10 @@ function App() {
           projectsVersion={projectsVersion}
         />
 
+        <Testimonials
+          t={t}
+        />
+
         <Team
           t={t}
         />
@@ -201,6 +219,11 @@ function App() {
       <FloatingContact
         t={t}
         onOpenForm={handleOpenContact}
+      />
+
+      <AIChatbot
+        t={t}
+        lang={lang}
       />
 
       <ContactPopup

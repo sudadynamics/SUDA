@@ -50,6 +50,34 @@ export const translations = {
     statSatisfactionPercent: 99,
     statUptimePercent: 99.9,
     statDevelopersCount: 4,
+    testimonialsTitle: "Müşteri Yorumları",
+    testimonialsSubtitle: "Suda Dynamics ile projelerini başarıyla tamamlayan değerli iş ortaklarımızın geri bildirimleri.",
+    testimonialsData: [
+      {
+        id: 1,
+        name: "Ahmet Yılmaz",
+        role: "Teknoloji Direktörü",
+        company: "Yılmaz Lojistik",
+        stars: 5,
+        quote: "B2B otomasyon projemizi tam 10 günde teslim aldık. Hız ve kod kalitesi muazzam!"
+      },
+      {
+        id: 2,
+        name: "Elif Demir",
+        role: "Ürün Yöneticisi",
+        company: "ModaTrend E-Ticaret",
+        stars: 5,
+        quote: "Next.js e-ticaret arayüzü hız rekorları kırıyor. Satış dönüşümlerimiz %40 arttı."
+      },
+      {
+        id: 3,
+        name: "Cem Aslan",
+        role: "Kurucu Ortak",
+        company: "PayPlus Finans",
+        stars: 5,
+        quote: "Mobil cüzdan uygulamamızın hem iOS hem de Android lansmanını 2 haftadan kısa sürede tamamladık."
+      }
+    ],
 
     // Workflow Section
     workflowTitle: "Çalışma Sürecimiz",
@@ -404,5 +432,33 @@ export const translations = {
     statSatisfactionPercent: 99,
     statUptimePercent: 99.9,
     statDevelopersCount: 4,
+    testimonialsTitle: "Client Reviews",
+    testimonialsSubtitle: "Feedback from our valuable business partners who successfully completed their projects with Suda Dynamics.",
+    testimonialsData: [
+      {
+        id: 1,
+        name: "Ahmet Yılmaz",
+        role: "CTO",
+        company: "Yilmaz Logistics",
+        stars: 5,
+        quote: "We received our B2B automation project in exactly 10 days. Speed and code quality are outstanding!"
+      },
+      {
+        id: 2,
+        name: "Elif Demir",
+        role: "Product Manager",
+        company: "ModaTrend E-Commerce",
+        stars: 5,
+        quote: "Our Next.js e-commerce UI is breaking speed records. Sales conversion boosted by 40%."
+      },
+      {
+        id: 3,
+        name: "Cem Aslan",
+        role: "Co-Founder",
+        company: "PayPlus Finance",
+        stars: 5,
+        quote: "We launched both iOS and Android apps for our mobile wallet in less than 2 weeks."
+      }
+    ],
   }
 };

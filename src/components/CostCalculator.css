@@ -1,11 +1,14 @@
+/* Cost Calculator Upgraded Styles */
 .calculator-modal {
   width: 100%;
-  max-width: 600px;
-  padding: 40px;
+  max-width: 620px;
+  padding: 30px;
   border-radius: 28px;
   position: relative;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
   z-index: 1001;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .calculator-header {
@@ -13,38 +16,63 @@
   margin-bottom: 25px;
 }
 
-.calc-badge {
-  display: inline-flex;
+/* Step Indicators */
+.calc-step-indicators {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  background: rgba(var(--accent-gold-rgb), 0.1);
-  border: 1px solid rgba(var(--accent-gold-rgb), 0.3);
-  color: var(--accent-gold);
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.72rem;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-.sparkle-gold {
-  color: var(--accent-gold);
-  animation: pulseGlow 2s infinite ease-in-out;
+.step-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.78rem;
+  transition: var(--transition-smooth);
+}
+
+.step-dot.active {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(var(--accent-purple-rgb), 0.4);
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: var(--border-color);
 }
 
 .calculator-title {
   font-family: var(--font-heading);
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.calculator-step-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .calculator-body {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
+  min-height: 280px;
 }
 
 .calc-group {
@@ -55,7 +83,7 @@
 
 .calc-group-title {
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 750;
   font-size: 0.95rem;
   color: var(--text-primary);
 }
@@ -145,56 +173,210 @@
   border: 1px solid var(--border-color);
 }
 
-/* Results box */
-.calc-results {
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px dashed var(--accent-gold);
-  background: rgba(var(--accent-gold-rgb), 0.02);
+/* Add-ons list selection */
+.addons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.results-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.result-card {
+.addon-checkbox-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
 }
 
-.result-icon {
-  width: 24px;
-  height: 24px;
+.addon-checkbox-card:hover {
+  border-color: rgba(var(--accent-purple-rgb), 0.3);
+  background: var(--bg-tertiary);
 }
 
-.result-icon.purple { color: var(--accent-purple); }
-.result-icon.gold { color: var(--accent-gold); }
-
-.result-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.addon-checkbox-card input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-purple);
+  cursor: pointer;
 }
 
-.result-val {
+.addon-card-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+}
+
+.addon-title {
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
+.addon-price {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 750;
+  color: var(--accent-turquoise);
+}
+
+/* Step 3: Contact details input controls */
+.contact-input-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calc-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.calc-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.calc-input-wrapper input {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.calc-input-wrapper input:focus {
+  border-color: var(--accent-purple);
+  background: var(--bg-tertiary);
+}
+
+/* Pricing Quote invoice summary slip */
+.calc-quote-summary {
+  margin-top: 18px;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px dashed var(--accent-gold);
+  background: rgba(var(--accent-gold-rgb), 0.015);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.summary-title {
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent-gold);
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(var(--accent-gold-rgb), 0.15);
+  padding-bottom: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.summary-row strong {
+  color: var(--text-primary);
+}
+
+.summary-row strong.purple-text {
+  color: var(--accent-purple);
+}
+
+.summary-row.total {
+  margin-top: 5px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summary-row.total span {
+  font-family: var(--font-heading);
+  font-weight: 750;
+  color: var(--text-primary);
+}
+
+.price-tag {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--accent-turquoise) !important;
+  text-shadow: 0 0 10px rgba(var(--accent-turquoise-rgb), 0.15);
+}
+
+.summary-promise-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(var(--accent-purple-rgb), 0.06);
+  border: 1px solid rgba(var(--accent-purple-rgb), 0.15);
+  color: var(--accent-purple);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.badge-shield-icon {
+  flex-shrink: 0;
+}
+
+/* Footer layout */
 .calculator-footer {
   margin-top: 25px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.calc-nav-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.calc-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 0.88rem;
+  margin-right: auto;
+}
+
+.calc-next-btn,
+.calc-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.88rem;
 }
 
 @media (max-width: 600px) {
   .calculator-modal {
-    padding: 30px 20px;
+    padding: 24px 20px;
   }
   .type-grid {
     grid-template-columns: 1fr;
@@ -210,8 +392,9 @@
     border: 1px solid var(--border-color);
     margin-bottom: 6px;
   }
-  .results-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
+  .summary-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }
