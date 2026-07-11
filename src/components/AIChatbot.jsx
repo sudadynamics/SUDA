@@ -28,17 +28,114 @@ const AIChatbot = ({ t, lang }) => {
     ]);
   }, [lang]);
 
-  const handleSendMessage = (textToSend) => {
+  // Suda Dynamics knowledge context for Gemini API
+  const systemInstruction = 
+    `Sen Suda Dynamics firmasının resmi yapay zeka asistanı Suda AI'sın.
+    Görevin, web sitesini ziyaret eden potansiyel müşterilere Suda Dynamics hakkında bilgi vermek, sorularını yanıtlamak ve onları yönlendirmektir.
+
+    Firma Bilgileri:
+    1. Teslimat Sözü: En büyük taahhüdümüz hızdır. Tüm otomasyon, entegrasyon, mobil ve web projelerini en geç 14 GÜN (2 hafta) içinde tam çalışır durumda teslim ediyoruz. Gecikme durumunda koşulsuz iade garantimiz var.
+    2. Hizmet Alanları:
+       - Süreç Otomasyonu (Veri kazıma, akıllı arka plan işleri, yapay zeka ajanları). Ortalama başlangıç fiyatı: 18.000 ₺ / $800.
+       - Sistem & API Entegrasyonları (ERP/CRM entegrasyonları, REST/GraphQL API'leri). Ortalama başlangıç fiyatı: 12.000 ₺ / $500.
+       - Mobil Uygulama Geliştirme (React Native, Flutter). Ortalama başlangıç fiyatı: 28.000 ₺ / $1200.
+       - Web & E-Ticaret (Next.js, React, ultra hızlı tasarımlar, SEO). Ortalama başlangıç fiyatı: 15.000 ₺ / $600.
+    3. Çekirdek Ekip:
+       - Zehra Abacı: Kurucu & Proje Yöneticisi
+       - Gizay Duru: Müşteri İlişkileri & Asistan (İletişim talepleriyle o ilgilenir)
+       - Furkan Uçar: Kıdemli Mobil & Web Geliştirici (React Native ve frontend uzmanı)
+       - Selahattin Sarıbay: Kıdemli Otomasyon & Entegrasyon Geliştirici (API mimarı ve arka plan uzmanı)
+    4. İletişim Bilgileri:
+       - Telefon: ${t.contactPhone || '0551 031 10 29'}
+       - E-posta: ${t.contactEmail || 'sudadynamics@gmail.com'}
+       - Adres: Suda Dynamics Istanbul Office
+
+    Önemli Kurallar:
+    - Yanıtların kısa, öz, kibar, profesyonel ve etkileyici olsun. Çok uzun paragraflar yazma.
+    - Ziyaretçi diline göre yanıt ver (soru Türkçe ise Türkçe, İngilizce ise İngilizce).
+    - Eğer kullanıcı fiyat hesabı veya bütçe teklifi sorarsa, sitemizdeki 'Proje Süre Hesaplayıcı' modülünü kullanmasını tavsiye et.
+    - Ziyaretçi iletişim bilgisini (e-posta veya telefon) verirse, 'Gizay Duru sizinle en kısa sürede iletişime geçecektir' de ve teşekkür et.`;
+
+  // Gemini REST API Call Handler
+  const callGeminiAPI = async (userMessage, currentHistory, apiKey) => {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    // Map conversation history to Gemini schema (role: 'user' or 'model')
+    const contents = [
+      ...currentHistory.slice(1).map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }]
+      })),
+      {
+        role: 'user',
+        parts: [{ text: userMessage }]
+      }
+    ];
+
+    const requestBody = {
+      contents,
+      systemInstruction: {
+        parts: [
+          { text: systemInstruction }
+        ]
+      },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 350
+      }
+    };
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!replyText) {
+      throw new Error('Gemini API returned an empty response.');
+    }
+
+    return replyText;
+  };
+
+  const handleSendMessage = async (textToSend) => {
     if (!textToSend.trim()) return;
 
     const userTime = new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
     const userMsg = { id: Date.now(), sender: 'user', text: textToSend, time: userTime };
     
+    // Cache current state and append immediately to user screen
+    const currentHistory = [...messages];
     setMessages(prev => [...prev, userMsg]);
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI thinking and reply
+    const apiKey = localStorage.getItem('suda_gemini_api_key');
+
+    if (apiKey && apiKey.trim().startsWith('AIzaSy')) {
+      try {
+        const botReply = await callGeminiAPI(textToSend, currentHistory, apiKey);
+        const botTime = new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+        setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: botReply, time: botTime }]);
+        setIsTyping(false);
+      } catch (e) {
+        console.error('Gemini API call failed, falling back to heuristics:', e);
+        triggerHeuristicResponse(textToSend);
+      }
+    } else {
+      triggerHeuristicResponse(textToSend);
+    }
+  };
+
+  const triggerHeuristicResponse = (textToSend) => {
     setTimeout(() => {
       const botReply = generateBotResponse(textToSend);
       const botTime = new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
@@ -47,11 +144,10 @@ const AIChatbot = ({ t, lang }) => {
     }, 1000);
   };
 
-  // Rule-based client side response matching
+  // Rule-based client side response matching (Fallback)
   const generateBotResponse = (query) => {
     const q = query.toLowerCase();
 
-    // Helper for Turkish responses
     if (lang === 'tr') {
       if (q.includes('fiyat') || q.includes('ücret') || q.includes('maliyet') || q.includes('para') || q.includes('tutar') || q.includes('teklif')) {
         return "Suda Dynamics olarak projelerimizi tipine, ölçeğine ve teslimat hızına göre şeffaf bir şekilde fiyatlandırıyoruz. Web sitelerimiz ortalama 15.000 ₺, mobil uygulamalarımız ise 28.000 ₺'den başlamaktadır. Detaylı bütçe hesabı için sitemizdeki 'Proje Süre Hesaplayıcı' aracını kullanabilirsiniz!";
@@ -73,8 +169,6 @@ const AIChatbot = ({ t, lang }) => {
       }
       return "Anladım. Suda Dynamics hakkında daha spesifik bir bilgi almak isterseniz; hizmetlerimiz, teslimat süremiz (maksimum 14 gün) veya tahmini fiyatlarımız hakkında sorular sorabilirsiniz. Dilerseniz iletişim bilgilerinizi buraya yazarak bizim sizi aramamızı isteyebilirsiniz!";
     } 
-    
-    // English responses
     else {
       if (q.includes('price') || q.includes('cost') || q.includes('budget') || q.includes('how much') || q.includes('quote')) {
         return "At Suda Dynamics, we value transparency. Web projects start at $600, while mobile applications start at $1,200. You can calculate a customized breakdown using the 'Timeline Calculator' tool on our website!";

@@ -18,6 +18,8 @@ const AdminPanel = ({
   const [activeTab, setActiveTab] = useState('general');
   const [localTr, setLocalTr] = useState({});
   const [localEn, setLocalEn] = useState({});
+  const [geminiApiKey, setGeminiApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
   
   // Showcase projects local state
   const [localProjects, setLocalProjects] = useState([]);
@@ -39,6 +41,8 @@ const AdminPanel = ({
           setLocalProjects([]);
         }
       }
+      const storedKey = localStorage.getItem('suda_gemini_api_key');
+      setGeminiApiKey(storedKey || '');
     }
   }, [isOpen, allTranslations]);
 
@@ -99,7 +103,8 @@ const AdminPanel = ({
   const handleSaveContactsStats = (e) => {
     e.preventDefault();
     saveTranslations(localTr, localEn);
-    alert('İletişim ve İstatistik bilgileri başarıyla kaydedildi!');
+    localStorage.setItem('suda_gemini_api_key', geminiApiKey);
+    alert('İletişim, İstatistik ve Yapay Zeka bilgileri başarıyla kaydedildi!');
   };
 
   // Lists CRUD operations helper
@@ -1023,6 +1028,33 @@ const AdminPanel = ({
                     </div>
                   </div>
 
+                </div>
+
+                <div className="card glass" style={{ padding: '20px', marginTop: '20px' }}>
+                  <h5 className="sub-section-title" style={{ marginBottom: '15px', color: 'var(--accent-purple)' }}>Gemini Yapay Zeka Entegrasyon Ayarları</h5>
+                  <div className="form-field">
+                    <label>Gemini API Anahtarı (API Key)</label>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <input 
+                        type={showApiKey ? "text" : "password"} 
+                        placeholder="AIzaSy..."
+                        value={geminiApiKey} 
+                        onChange={e => setGeminiApiKey(e.target.value)} 
+                        style={{ flex: 1 }}
+                      />
+                      <button 
+                        type="button" 
+                        className="btn-secondary" 
+                        onClick={() => setShowApiKey(!showApiKey)}
+                        style={{ width: 'auto', padding: '10px 16px', borderRadius: '10px', fontSize: '0.85rem' }}
+                      >
+                        {showApiKey ? "Gizle" : "Göster"}
+                      </button>
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px', display: 'block' }}>
+                      API anahtarı tarayıcınızın yerel hafızasında güvenli bir şekilde saklanır ve sunucuya aktarılmaz.
+                    </span>
+                  </div>
                 </div>
 
                 <div className="form-actions-bar">
