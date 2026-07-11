@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import './CostCalculator.css';
 
-const CostCalculator = ({ isOpen, onClose, t, lang }) => {
+const CostCalculator = ({ isOpen, onClose, t, lang, onCaptureLead }) => {
   const [step, setStep] = useState(1);
   const [projectType, setProjectType] = useState('web');
   const [scale, setScale] = useState('medium');
@@ -141,6 +141,17 @@ const CostCalculator = ({ isOpen, onClose, t, lang }) => {
                 `- Tahmini Teslim Süresi: ~${timelineStr}\n` +
                 `- Tahmini Bütçe: *${finalCost}*\n\n` +
                 `Detayları görüşmek üzere hazırız. En kısa sürede geri dönüşünüzü bekliyoruz.`;
+
+    if (onCaptureLead) {
+      onCaptureLead({
+        name: clientName,
+        email: clientEmail,
+        phone: clientPhone,
+        source: 'Calculator',
+        budget: finalCost,
+        details: `Type: ${getTypeName()} | Scale: ${scale.toUpperCase()} | Speed: ${urgency.toUpperCase()} | Add-ons: ${[hasApi ? 'API' : '', hasMultiLang ? 'MultiLang' : '', hasSeo ? 'SEO' : ''].filter(Boolean).join(', ') || 'None'} | Est. Timeline: ~${timelineStr}`
+      });
+    }
 
     const url = `https://wa.me/905510311029?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');

@@ -228,7 +228,31 @@ export const translations = {
     adminError: "Hatalı Kullanıcı Adı veya Şifre!",
     adminSuccess: "Giriş Başarılı!",
     confirmDelete: "Bu projeyi silmek istediğinize emin misiniz?",
-    noProjects: "Henüz sergilenecek bir proje bulunmamaktadır."
+    noProjects: "Henüz sergilenecek bir proje bulunmamaktadır.",
+    faqTitle: "Sıkça Sorulan Sorular",
+    faqSubtitle: "Suda Dynamics hakkında aklınıza takılabilecek temel sorular ve cevapları.",
+    faqData: [
+      {
+        id: 1,
+        question: "Projeleri gerçekten 2 haftada teslim ediyor musunuz?",
+        answer: "Evet! Çevik yazılım mimarimiz, hazır modüllerimiz ve 4 kişilik kıdemli çekirdek ekibimiz sayesinde web, mobil, entegrasyon ve otomasyon projelerini en geç 14 gün (2 hafta) içinde tam çalışır durumda teslim ediyoruz."
+      },
+      {
+        id: 2,
+        question: "Gecikme durumunda koşulsuz iade garantisi nasıl çalışıyor?",
+        answer: "Eğer projeyi anlaştığımız süre (maksimum 14 gün) içinde yayına veya teslime hazır hale getiremezsek, hiçbir mazeret belirtmeksizin ödediğiniz tutarın tamamını kesintisiz olarak iade ediyoruz."
+      },
+      {
+        id: 3,
+        question: "Hangi yazılım teknolojilerini kullanıyorsunuz?",
+        answer: "Projelerimizde Next.js, React, Node.js, Python, Flutter, React Native, Logo ERP API'leri, REST ve GraphQL gibi yüksek performanslı ve modern teknolojileri kullanıyoruz."
+      },
+      {
+        id: 4,
+        question: "Proje sonrasında teknik destek veriyor musunuz?",
+        answer: "Evet, tüm projelerimiz teslim edildikten sonra 1 ay boyunca ücretsiz bakım, performans izleme ve hata giderme desteğiyle birlikte gelir. Talebinize göre aylık destek paketleri de sunuyoruz."
+      }
+    ]
   },
   en: {
     navHome: "Home",
@@ -460,5 +484,29 @@ export const translations = {
         quote: "We launched both iOS and Android apps for our mobile wallet in less than 2 weeks."
       }
     ],
+    faqTitle: "Frequently Asked Questions",
+    faqSubtitle: "Answers to common questions about Suda Dynamics services and delivery.",
+    faqData: [
+      {
+        id: 1,
+        question: "Do you really deliver projects in 2 weeks?",
+        answer: "Yes! Thanks to our agile architecture, ready-to-deploy modules, and our senior core team of 4, we deliver all web, mobile, integration, and automation projects within 14 days (2 weeks) max."
+      },
+      {
+        id: 2,
+        question: "How does the refund guarantee work in case of delays?",
+        answer: "If we fail to deliver the project within the agreed timeframe (maximum 14 days), we will issue a full, unconditional refund of your payment immediately."
+      },
+      {
+        id: 3,
+        question: "Which software technologies do you use?",
+        answer: "We develop high-performance software using React, Next.js, Flutter, React Native, Node.js, Python, REST/GraphQL APIs, and Logo ERP connectors."
+      },
+      {
+        id: 4,
+        question: "Do you provide technical support after launch?",
+        answer: "Yes, all our projects include 1 month of free post-delivery maintenance, performance monitoring, and bug-fixing support. Ongoing monthly SLA contracts are also available."
+      }
+    ]
   }
 };

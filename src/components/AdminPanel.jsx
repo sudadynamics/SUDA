@@ -18,8 +18,7 @@ const AdminPanel = ({
   const [activeTab, setActiveTab] = useState('general');
   const [localTr, setLocalTr] = useState({});
   const [localEn, setLocalEn] = useState({});
-  const [geminiApiKey, setGeminiApiKey] = useState('');
-  const [showApiKey, setShowApiKey] = useState(false);
+  const [leadsList, setLeadsList] = useState([]);
   
   // Showcase projects local state
   const [localProjects, setLocalProjects] = useState([]);
@@ -41,10 +40,19 @@ const AdminPanel = ({
           setLocalProjects([]);
         }
       }
-      const storedKey = localStorage.getItem('suda_gemini_api_key');
-      setGeminiApiKey(storedKey || '');
     }
   }, [isOpen, allTranslations]);
+
+  useEffect(() => {
+    if (isOpen && activeTab === 'leads') {
+      const stored = localStorage.getItem('suda_leads');
+      try {
+        setLeadsList(stored ? JSON.parse(stored) : []);
+      } catch (e) {
+        setLeadsList([]);
+      }
+    }
+  }, [isOpen, activeTab]);
 
   const handleSubmitLogin = (e) => {
     e.preventDefault();
@@ -103,8 +111,20 @@ const AdminPanel = ({
   const handleSaveContactsStats = (e) => {
     e.preventDefault();
     saveTranslations(localTr, localEn);
-    localStorage.setItem('suda_gemini_api_key', geminiApiKey);
-    alert('İletişim, İstatistik ve Yapay Zeka bilgileri başarıyla kaydedildi!');
+    alert('İletişim ve İstatistik bilgileri başarıyla kaydedildi!');
+  };
+
+  const handleDeleteLead = (id) => {
+    if (!window.confirm('Bu talebi silmek istediğinize emin misiniz?')) return;
+    const updated = leadsList.filter(l => l.id !== id);
+    setLeadsList(updated);
+    localStorage.setItem('suda_leads', JSON.stringify(updated));
+  };
+
+  const handleChangeLeadStatus = (id, newStatus) => {
+    const updated = leadsList.map(l => l.id === id ? { ...l, status: newStatus } : l);
+    setLeadsList(updated);
+    localStorage.setItem('suda_leads', JSON.stringify(updated));
   };
 
   // Lists CRUD operations helper
@@ -236,6 +256,26 @@ const AdminPanel = ({
           companyEn: '',
           quoteTr: '',
           quoteEn: ''
+        };
+      }
+    } else if (type === 'faq') {
+      if (index !== null) {
+        const itemTr = localTr.faqData[index];
+        const itemEn = localEn.faqData[index];
+        initialData = {
+          id: itemTr.id,
+          questionTr: itemTr.question,
+          questionEn: itemEn.question,
+          answerTr: itemTr.answer,
+          answerEn: itemEn.answer
+        };
+      } else {
+        initialData = {
+          id: 'faq_' + Date.now(),
+          questionTr: '',
+          questionEn: '',
+          answerTr: '',
+          answerEn: ''
         };
       }
     }
@@ -396,6 +436,32 @@ const AdminPanel = ({
       }
 
       saveTranslations(updatedTr, updatedEn);
+    } else if (editingItem.type === 'faq') {
+      const faqTr = {
+        id: editingItem.data.id,
+        question: editingItem.data.questionTr,
+        answer: editingItem.data.answerTr
+      };
+      const faqEn = {
+        id: editingItem.data.id,
+        question: editingItem.data.questionEn,
+        answer: editingItem.data.answerEn
+      };
+
+      const updatedTr = { ...localTr };
+      const updatedEn = { ...localEn };
+
+      if (!updatedTr.faqData) updatedTr.faqData = [];
+      if (!updatedEn.faqData) updatedEn.faqData = [];
+
+      if (editingItem.index !== null) {
+        updatedTr.faqData[editingItem.index] = faqTr;
+        updatedEn.faqData[editingItem.index] = faqEn;
+      } else {
+        updatedTr.faqData.push(faqTr);
+        updatedEn.faqData.push(faqEn);
+      }
+      saveTranslations(updatedTr, updatedEn);
     }
 
     setEditingItem(null);
@@ -436,6 +502,12 @@ const AdminPanel = ({
       const updatedEn = { ...localEn };
       updatedTr.testimonialsData.splice(index, 1);
       updatedEn.testimonialsData.splice(index, 1);
+      saveTranslations(updatedTr, updatedEn);
+    } else if (type === 'faq') {
+      const updatedTr = { ...localTr };
+      const updatedEn = { ...localEn };
+      updatedTr.faqData.splice(index, 1);
+      updatedEn.faqData.splice(index, 1);
       saveTranslations(updatedTr, updatedEn);
     }
   };
@@ -598,6 +670,20 @@ const AdminPanel = ({
             >
               <Sparkles size={16} />
               <span>Müşteri Yorumları</span>
+            </button>
+            <button 
+              className={`sidebar-tab-btn ${activeTab === 'faq' ? 'active' : ''}`}
+              onClick={() => setActiveTab('faq')}
+            >
+              <HelpCircle size={16} />
+              <span>SSS Yönetimi</span>
+            </button>
+            <button 
+              className={`sidebar-tab-btn ${activeTab === 'leads' ? 'active' : ''}`}
+              onClick={() => setActiveTab('leads')}
+            >
+              <Users size={16} />
+              <span>Gelen Talepler (CRM)</span>
             </button>
           </aside>
 
@@ -1030,33 +1116,6 @@ const AdminPanel = ({
 
                 </div>
 
-                <div className="card glass" style={{ padding: '20px', marginTop: '20px' }}>
-                  <h5 className="sub-section-title" style={{ marginBottom: '15px', color: 'var(--accent-purple)' }}>Gemini Yapay Zeka Entegrasyon Ayarları</h5>
-                  <div className="form-field">
-                    <label>Gemini API Anahtarı (API Key)</label>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <input 
-                        type={showApiKey ? "text" : "password"} 
-                        placeholder="AIzaSy..."
-                        value={geminiApiKey} 
-                        onChange={e => setGeminiApiKey(e.target.value)} 
-                        style={{ flex: 1 }}
-                      />
-                      <button 
-                        type="button" 
-                        className="btn-secondary" 
-                        onClick={() => setShowApiKey(!showApiKey)}
-                        style={{ width: 'auto', padding: '10px 16px', borderRadius: '10px', fontSize: '0.85rem' }}
-                      >
-                        {showApiKey ? "Gizle" : "Göster"}
-                      </button>
-                    </div>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px', display: 'block' }}>
-                      API anahtarı tarayıcınızın yerel hafızasında güvenli bir şekilde saklanır ve sunucuya aktarılmaz.
-                    </span>
-                  </div>
-                </div>
-
                 <div className="form-actions-bar">
                   <button type="submit" className="btn-save-form">
                     <Save size={16} />
@@ -1125,6 +1184,107 @@ const AdminPanel = ({
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 8: FAQ */}
+            {activeTab === 'faq' && (
+              <div className="tab-list-view">
+                <div className="tab-list-header">
+                  <h4 className="tab-title-heading">Sıkça Sorulan Sorular ({localTr.faqData?.length || 0})</h4>
+                  <button className="btn-add-item" type="button" onClick={() => openItemModal('faq')}>
+                    <Plus size={16} />
+                    <span>Yeni Soru Ekle</span>
+                  </button>
+                </div>
+
+                <div className="crud-items-grid">
+                  {localTr.faqData?.map((item, idx) => (
+                    <div key={item.id || idx} className="crud-item-card glass">
+                      <div className="crud-card-info">
+                        <span className="crud-card-badge">FAQ</span>
+                        <div>
+                          <h5 className="crud-card-name">{item.question}</h5>
+                          <p className="crud-card-sub">{item.answer}</p>
+                        </div>
+                      </div>
+                      <div className="crud-card-actions">
+                        <button className="btn-crud-edit" type="button" onClick={() => openItemModal('faq', idx)}>
+                          <Edit2 size={14} />
+                        </button>
+                        <button className="btn-crud-delete" type="button" onClick={() => handleDeleteItem('faq', idx)}>
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 9: LEADS (CRM) */}
+            {activeTab === 'leads' && (
+              <div className="tab-list-view">
+                <div className="tab-list-header">
+                  <h4 className="tab-title-heading">Gelen Talepler ({leadsList.length})</h4>
+                </div>
+                <div className="leads-table-wrapper card glass" style={{ overflowX: 'auto' }}>
+                  <table className="leads-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>
+                        <th style={{ padding: '12px' }}>Tarih</th>
+                        <th style={{ padding: '12px' }}>Müşteri</th>
+                        <th style={{ padding: '12px' }}>İletişim</th>
+                        <th style={{ padding: '12px' }}>Kaynak</th>
+                        <th style={{ padding: '12px' }}>Bütçe</th>
+                        <th style={{ padding: '12px' }}>Durum</th>
+                        <th style={{ padding: '12px' }}>İşlem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leadsList.length === 0 ? (
+                        <tr>
+                          <td colSpan="7" style={{ textAlign: 'center', padding: '30px', color: 'var(--text-secondary)' }}>
+                            Henüz kayıtlı bir müşteri talebi bulunmamaktadır.
+                          </td>
+                        </tr>
+                      ) : (
+                        leadsList.map(lead => (
+                          <tr key={lead.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                            <td style={{ padding: '12px', fontSize: '0.82rem' }}>{lead.date}</td>
+                            <td style={{ padding: '12px', fontWeight: '600' }}>
+                              <div>{lead.name}</div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '400', marginTop: '3px' }}>{lead.details}</div>
+                            </td>
+                            <td style={{ padding: '12px', fontSize: '0.82rem' }}>{lead.contact}</td>
+                            <td style={{ padding: '12px' }}>
+                              <span className={`lead-source-badge ${lead.source.toLowerCase()}`}>
+                                {lead.source}
+                              </span>
+                            </td>
+                            <td style={{ padding: '12px', color: 'var(--accent-turquoise)', fontWeight: '750' }}>{lead.budget}</td>
+                            <td style={{ padding: '12px' }}>
+                              <select 
+                                className={`lead-status-select ${lead.status === 'Yeni' ? 'status-new' : lead.status === 'İletişime Geçildi' ? 'status-contacted' : 'status-done'}`}
+                                value={lead.status} 
+                                onChange={e => handleChangeLeadStatus(lead.id, e.target.value)}
+                              >
+                                <option value="Yeni">Yeni</option>
+                                <option value="İletişime Geçildi">Görüşülüyor</option>
+                                <option value="Tamamlandı">Tamamlandı</option>
+                              </select>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <button className="btn-crud-delete" type="button" onClick={() => handleDeleteLead(lead.id)}>
+                                <Trash2 size={14} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             )}
@@ -1679,6 +1839,67 @@ const AdminPanel = ({
                       </div>
                     </div>
                   </>
+                )}
+
+                {/* 6. FAQ EDITOR FIELDS */}
+                {editingItem.type === 'faq' && (
+                  <div className="form-translation-grid">
+                    <div className="lang-col">
+                      <span className="lang-indicator">Türkçe</span>
+                      <div className="form-field">
+                        <label>Soru (TR)</label>
+                        <input 
+                          type="text" 
+                          required
+                          value={editingItem.data.questionTr || ''} 
+                          onChange={e => setEditingItem({
+                            ...editingItem,
+                            data: { ...editingItem.data, questionTr: e.target.value }
+                          })}
+                        />
+                      </div>
+                      <div className="form-field">
+                        <label>Cevap (TR)</label>
+                        <textarea 
+                          rows="4" 
+                          required
+                          value={editingItem.data.answerTr || ''} 
+                          onChange={e => setEditingItem({
+                            ...editingItem,
+                            data: { ...editingItem.data, answerTr: e.target.value }
+                          })}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="lang-col">
+                      <span className="lang-indicator">English</span>
+                      <div className="form-field">
+                        <label>Question (EN)</label>
+                        <input 
+                          type="text" 
+                          required
+                          value={editingItem.data.questionEn || ''} 
+                          onChange={e => setEditingItem({
+                            ...editingItem,
+                            data: { ...editingItem.data, questionEn: e.target.value }
+                          })}
+                        />
+                      </div>
+                      <div className="form-field">
+                        <label>Answer (EN)</label>
+                        <textarea 
+                          rows="4" 
+                          required
+                          value={editingItem.data.answerEn || ''} 
+                          onChange={e => setEditingItem({
+                            ...editingItem,
+                            data: { ...editingItem.data, answerEn: e.target.value }
+                          })}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 )}
 
               </div>

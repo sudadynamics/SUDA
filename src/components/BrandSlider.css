@@ -1,0 +1,120 @@
+/* Infinite Scrolling Partner/Brand Marquee */
+.brand-slider-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 30px 0;
+  position: relative;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.2), transparent);
+}
+
+/* Fades out left and right edges for smooth visual transition */
+.brand-slider-wrapper::before,
+.brand-slider-wrapper::after {
+  content: "";
+  height: 100%;
+  width: 150px;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.brand-slider-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-primary), transparent);
+}
+
+.brand-slider-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-primary), transparent);
+}
+
+.brand-slider-container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.brand-slider-track {
+  display: flex;
+  gap: 25px;
+  width: max-content;
+  animation: scroll-marquee 25s linear infinite;
+}
+
+.brand-slider-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-33.33% - 8.33px)); }
+}
+
+.brand-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 36px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  min-width: 180px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.015);
+  box-shadow: 0 4px 15px var(--shadow-color);
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.brand-card:hover {
+  border-color: var(--accent-turquoise);
+  background: rgba(var(--accent-turquoise-rgb), 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(var(--accent-turquoise-rgb), 0.15);
+}
+
+.brand-card-name {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  opacity: 0.85;
+  transition: var(--transition-smooth);
+}
+
+.brand-card:hover .brand-card-name {
+  color: var(--accent-turquoise);
+  opacity: 1;
+}
+
+.brand-card-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .brand-slider-wrapper {
+    padding: 20px 0;
+  }
+  .brand-slider-wrapper::before,
+  .brand-slider-wrapper::after {
+    width: 60px;
+  }
+  .brand-card {
+    padding: 12px 24px;
+    min-width: 140px;
+  }
+  .brand-card-name {
+    font-size: 0.95rem;
+  }
+  .brand-card-tag {
+    font-size: 0.65rem;
+  }
+}

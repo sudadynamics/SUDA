@@ -12,6 +12,8 @@ import Workflow from './components/Workflow';
 import AdminPanel from './components/AdminPanel';
 import Testimonials from './components/Testimonials';
 import AIChatbot from './components/AIChatbot';
+import BrandSlider from './components/BrandSlider';
+import FAQ from './components/FAQ';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -113,6 +115,31 @@ function App() {
     setContactOpen(true);
   };
 
+  const handleCaptureLead = (leadData) => {
+    try {
+      const storedLeads = localStorage.getItem('suda_leads');
+      let leads = [];
+      if (storedLeads) {
+        leads = JSON.parse(storedLeads);
+      }
+      const newLead = {
+        id: 'lead_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        date: new Date().toLocaleString('tr-TR'),
+        name: leadData.name || 'Bilinmeyen Müşteri',
+        contact: leadData.contact || leadData.email || leadData.phone || 'Girilmedi',
+        source: leadData.source || 'Genel',
+        budget: leadData.budget || 'Belirtilmedi',
+        details: leadData.details || '',
+        status: 'Yeni'
+      };
+      leads.unshift(newLead);
+      localStorage.setItem('suda_leads', JSON.stringify(leads));
+      console.log('Lead captured successfully:', newLead);
+    } catch (e) {
+      console.error('Failed to capture lead:', e);
+    }
+  };
+
   return (
     <div className="app-wrapper">
       {/* Custom Premium Agency Cursor Follower */}
@@ -151,6 +178,8 @@ function App() {
           onContactClick={handleOpenContact}
         />
 
+        <BrandSlider />
+
         <Services
           t={t}
           onInquireService={handleInquireService}
@@ -174,6 +203,11 @@ function App() {
 
         <Testimonials
           t={t}
+        />
+
+        <FAQ
+          t={t}
+          lang={lang}
         />
 
         <Team
@@ -224,6 +258,7 @@ function App() {
       <AIChatbot
         t={t}
         lang={lang}
+        onCaptureLead={handleCaptureLead}
       />
 
       <ContactPopup
@@ -238,6 +273,7 @@ function App() {
         onClose={() => setCalcOpen(false)}
         t={t}
         lang={lang}
+        onCaptureLead={handleCaptureLead}
       />
 
       <AdminPanel

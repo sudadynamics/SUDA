@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send, Bot, User, Sparkles, SendHorizontal } from 'lucide-react';
 import './AIChatbot.css';
 
-const AIChatbot = ({ t, lang }) => {
+const AIChatbot = ({ t, lang, onCaptureLead }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -28,111 +28,32 @@ const AIChatbot = ({ t, lang }) => {
     ]);
   }, [lang]);
 
-  // Suda Dynamics knowledge context for Gemini API
-  const systemInstruction = 
-    `Sen Suda Dynamics firmasının resmi yapay zeka asistanı Suda AI'sın.
-    Görevin, web sitesini ziyaret eden potansiyel müşterilere Suda Dynamics hakkında bilgi vermek, sorularını yanıtlamak ve onları yönlendirmektir.
-
-    Firma Bilgileri:
-    1. Teslimat Sözü: En büyük taahhüdümüz hızdır. Tüm otomasyon, entegrasyon, mobil ve web projelerini en geç 14 GÜN (2 hafta) içinde tam çalışır durumda teslim ediyoruz. Gecikme durumunda koşulsuz iade garantimiz var.
-    2. Hizmet Alanları:
-       - Süreç Otomasyonu (Veri kazıma, akıllı arka plan işleri, yapay zeka ajanları). Ortalama başlangıç fiyatı: 18.000 ₺ / $800.
-       - Sistem & API Entegrasyonları (ERP/CRM entegrasyonları, REST/GraphQL API'leri). Ortalama başlangıç fiyatı: 12.000 ₺ / $500.
-       - Mobil Uygulama Geliştirme (React Native, Flutter). Ortalama başlangıç fiyatı: 28.000 ₺ / $1200.
-       - Web & E-Ticaret (Next.js, React, ultra hızlı tasarımlar, SEO). Ortalama başlangıç fiyatı: 15.000 ₺ / $600.
-    3. Çekirdek Ekip:
-       - Zehra Abacı: Kurucu & Proje Yöneticisi
-       - Gizay Duru: Müşteri İlişkileri & Asistan (İletişim talepleriyle o ilgilenir)
-       - Furkan Uçar: Kıdemli Mobil & Web Geliştirici (React Native ve frontend uzmanı)
-       - Selahattin Sarıbay: Kıdemli Otomasyon & Entegrasyon Geliştirici (API mimarı ve arka plan uzmanı)
-    4. İletişim Bilgileri:
-       - Telefon: ${t.contactPhone || '0551 031 10 29'}
-       - E-posta: ${t.contactEmail || 'sudadynamics@gmail.com'}
-       - Adres: Suda Dynamics Istanbul Office
-
-    Önemli Kurallar:
-    - Yanıtların kısa, öz, kibar, profesyonel ve etkileyici olsun. Çok uzun paragraflar yazma.
-    - Ziyaretçi diline göre yanıt ver (soru Türkçe ise Türkçe, İngilizce ise İngilizce).
-    - Eğer kullanıcı fiyat hesabı veya bütçe teklifi sorarsa, sitemizdeki 'Proje Süre Hesaplayıcı' modülünü kullanmasını tavsiye et.
-    - Ziyaretçi iletişim bilgisini (e-posta veya telefon) verirse, 'Gizay Duru sizinle en kısa sürede iletişime geçecektir' de ve teşekkür et.`;
-
-  // Gemini REST API Call Handler
-  const callGeminiAPI = async (userMessage, currentHistory, apiKey) => {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-    // Map conversation history to Gemini schema (role: 'user' or 'model')
-    const contents = [
-      ...currentHistory.slice(1).map(msg => ({
-        role: msg.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.text }]
-      })),
-      {
-        role: 'user',
-        parts: [{ text: userMessage }]
-      }
-    ];
-
-    const requestBody = {
-      contents,
-      systemInstruction: {
-        parts: [
-          { text: systemInstruction }
-        ]
-      },
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 350
-      }
-    };
-
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!replyText) {
-      throw new Error('Gemini API returned an empty response.');
-    }
-
-    return replyText;
-  };
-
   const handleSendMessage = async (textToSend) => {
     if (!textToSend.trim()) return;
 
     const userTime = new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
     const userMsg = { id: Date.now(), sender: 'user', text: textToSend, time: userTime };
     
-    // Cache current state and append immediately to user screen
-    const currentHistory = [...messages];
     setMessages(prev => [...prev, userMsg]);
     setInputValue('');
     setIsTyping(true);
 
-    const apiKey = localStorage.getItem('suda_gemini_api_key');
-
-    if (apiKey && apiKey.trim().startsWith('AIzaSy')) {
-      try {
-        const botReply = await callGeminiAPI(textToSend, currentHistory, apiKey);
-        const botTime = new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
-        setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: botReply, time: botTime }]);
-        setIsTyping(false);
-      } catch (e) {
-        console.error('Gemini API call failed, falling back to heuristics:', e);
-        triggerHeuristicResponse(textToSend);
-      }
-    } else {
-      triggerHeuristicResponse(textToSend);
+    // Dynamic parsing for client leads (email or phone)
+    const emailMatch = textToSend.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = textToSend.match(/(?:\+?90|0)?[ ]?[0-9]{3}[ ]?[0-9]{3}[ ]?[0-9]{2}[ ]?[0-9]{2}/) || textToSend.match(/[0-9]{9,12}/);
+    
+    if ((emailMatch || phoneMatch) && onCaptureLead) {
+      const contactVal = (emailMatch ? emailMatch[0] : '') + ' ' + (phoneMatch ? phoneMatch[0] : '');
+      onCaptureLead({
+        name: 'Chatbot Ziyaretçisi',
+        contact: contactVal.trim() || textToSend,
+        source: 'Chatbot',
+        budget: 'Belirtilmedi',
+        details: `Sohbet girdisi: "${textToSend}"`
+      });
     }
+
+    triggerHeuristicResponse(textToSend);
   };
 
   const triggerHeuristicResponse = (textToSend) => {

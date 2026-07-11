@@ -724,3 +724,95 @@
     bottom: 90px;
   }
 }
+
+/* CRM Leads Dashboard Styles */
+.leads-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.leads-table th {
+  font-family: var(--font-heading);
+  font-weight: 750;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.leads-table td {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.leads-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* Badges and dropdown selectors inside CRM leads */
+.lead-source-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.lead-source-badge.chatbot {
+  background: rgba(var(--accent-purple-rgb), 0.12);
+  color: var(--accent-purple);
+  border: 1px solid rgba(var(--accent-purple-rgb), 0.25);
+}
+
+.lead-source-badge.calculator {
+  background: rgba(var(--accent-turquoise-rgb), 0.12);
+  color: var(--accent-turquoise);
+  border: 1px solid rgba(var(--accent-turquoise-rgb), 0.25);
+}
+
+.lead-source-badge.genel {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.lead-status-select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.lead-status-select:focus {
+  border-color: var(--accent-purple);
+}
+
+.lead-status-select.status-new {
+  background: rgba(var(--accent-gold-rgb), 0.08);
+  color: var(--accent-gold);
+  border-color: rgba(var(--accent-gold-rgb), 0.25);
+}
+
+.lead-status-select.status-contacted {
+  background: rgba(var(--accent-turquoise-rgb), 0.08);
+  color: var(--accent-turquoise);
+  border-color: rgba(var(--accent-turquoise-rgb), 0.25);
+}
+
+.lead-status-select.status-done {
+  background: rgba(46, 213, 115, 0.08);
+  color: #2ed573;
+  border-color: rgba(46, 213, 115, 0.25);
+}
