@@ -7,6 +7,11 @@ const Hero = ({ t, onContactClick }) => {
   const [stats, setStats] = useState({ projects: 0, satisfaction: 0, uptime: 90.0, devs: 0 });
 
   useEffect(() => {
+    const targetProjects = parseInt(t.statProjectsCount) || 120;
+    const targetSatisfaction = parseInt(t.statSatisfactionPercent) || 99;
+    const targetUptime = parseFloat(t.statUptimePercent) || 99.9;
+    const targetDevs = parseInt(t.statDevelopersCount) || 4;
+
     const duration = 2000;
     const steps = 50;
     const stepTime = duration / steps;
@@ -15,20 +20,20 @@ const Hero = ({ t, onContactClick }) => {
     const timer = setInterval(() => {
       currentStep++;
       setStats({
-        projects: Math.floor((120 / steps) * currentStep),
-        satisfaction: Math.floor((99 / steps) * currentStep),
-        uptime: parseFloat((90.0 + (9.9 / steps) * currentStep).toFixed(1)),
-        devs: Math.min(4, Math.floor((4 / (steps / 2)) * currentStep))
+        projects: Math.floor((targetProjects / steps) * currentStep),
+        satisfaction: Math.floor((targetSatisfaction / steps) * currentStep),
+        uptime: parseFloat((90.0 + ((targetUptime - 90.0) / steps) * currentStep).toFixed(1)),
+        devs: Math.min(targetDevs, Math.floor((targetDevs / (steps / 2)) * currentStep))
       });
 
       if (currentStep >= steps) {
-        setStats({ projects: 120, satisfaction: 99, uptime: 99.9, devs: 4 });
+        setStats({ projects: targetProjects, satisfaction: targetSatisfaction, uptime: targetUptime, devs: targetDevs });
         clearInterval(timer);
       }
     }, stepTime);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [t.statProjectsCount, t.statSatisfactionPercent, t.statUptimePercent, t.statDevelopersCount]);
 
   const handleScrollToServices = (e) => {
     e.preventDefault();

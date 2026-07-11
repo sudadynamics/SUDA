@@ -19,7 +19,7 @@ const Footer = ({ t, onContactClick, isAdmin, onAdminLoginClick, onAdminLogout }
   };
 
   const handlePhoneCall = () => {
-    window.open('tel:05510311029', '_self');
+    window.open(`tel:${t.contactPhoneRaw || '05510311029'}`, '_self');
   };
 
   return (
@@ -68,7 +68,7 @@ const Footer = ({ t, onContactClick, isAdmin, onAdminLoginClick, onAdminLogout }
             <li>
               <button onClick={handlePhoneCall} className="contact-info-btn">
                 <Phone size={16} className="contact-icon purple" />
-                <span>0551 031 10 29</span>
+                <span>{t.contactPhone || '0551 031 10 29'}</span>
               </button>
             </li>
             <li>
@@ -78,9 +78,9 @@ const Footer = ({ t, onContactClick, isAdmin, onAdminLoginClick, onAdminLogout }
               </button>
             </li>
             <li>
-              <a href="mailto:sudadynamics@gmail.com" className="contact-info-btn email-link">
+              <a href={`mailto:${t.contactEmail || 'sudadynamics@gmail.com'}`} className="contact-info-btn email-link">
                 <Mail size={16} className="contact-icon turquoise" />
-                <span>sudadynamics@gmail.com</span>
+                <span>{t.contactEmail || 'sudadynamics@gmail.com'}</span>
               </a>
             </li>
           </ul>
@@ -93,13 +93,22 @@ const Footer = ({ t, onContactClick, isAdmin, onAdminLoginClick, onAdminLogout }
           &copy; {new Date().getFullYear()} Suda Dynamics. {t.footerRights}
           <span style={{ margin: '0 10px', color: 'var(--border-color)' }}>|</span>
           {isAdmin ? (
-            <button
-              onClick={onAdminLogout}
-              className="footer-admin-link-btn"
-              style={{ display: 'inline-flex', verticalAlign: 'middle', cursor: 'pointer', background: 'none', border: 'none', padding: 0, color: 'var(--accent-red)', fontWeight: '600', fontFamily: 'inherit', fontSize: '0.85rem' }}
-            >
-              {t.adminLogoutBtn}
-            </button>
+            <>
+              <button
+                onClick={onAdminLoginClick}
+                className="footer-admin-link-btn"
+                style={{ display: 'inline-flex', verticalAlign: 'middle', cursor: 'pointer', background: 'none', border: 'none', padding: 0, color: 'var(--accent-purple)', fontWeight: '600', fontFamily: 'inherit', fontSize: '0.85rem', marginRight: '15px' }}
+              >
+                Yönetici Paneli
+              </button>
+              <button
+                onClick={onAdminLogout}
+                className="footer-admin-link-btn"
+                style={{ display: 'inline-flex', verticalAlign: 'middle', cursor: 'pointer', background: 'none', border: 'none', padding: 0, color: 'var(--accent-red)', fontWeight: '600', fontFamily: 'inherit', fontSize: '0.85rem' }}
+              >
+                {t.adminLogoutBtn}
+              </button>
+            </>
           ) : (
             <button
               onClick={onAdminLoginClick}

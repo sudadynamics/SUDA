@@ -40,7 +40,7 @@ const ContactPopup = ({ isOpen, onClose, t, preselectedService }) => {
     // Format the WhatsApp text template professionally
     const textMessage = `*Merhaba Suda Dynamics!* \n\n*İsim:* ${name}\n*E-posta:* ${email}\n*Telefon:* ${phone}\n*İlgilenilen Hizmet:* ${service || 'Belirtilmedi'}\n\n*Proje Detayları:*\n${message}`;
     const encodedMessage = encodeURIComponent(textMessage);
-    const whatsappUrl = `https://wa.me/905510311029?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${t.contactWhatsApp || '905510311029'}?text=${encodedMessage}`;
 
     setSuccess(true);
     setError('');
@@ -53,7 +53,7 @@ const ContactPopup = ({ isOpen, onClose, t, preselectedService }) => {
   };
 
   const handleDirectCall = () => {
-    window.open('tel:05510311029', '_self');
+    window.open(`tel:${t.contactPhoneRaw || '05510311029'}`, '_self');
   };
 
   return (

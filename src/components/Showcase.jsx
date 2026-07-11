@@ -45,7 +45,7 @@ const DEFAULT_PROJECTS = [
   }
 ];
 
-const Showcase = ({ t, lang, isAdmin, onLogout }) => {
+const Showcase = ({ t, lang, isAdmin, onLogout, projectsVersion }) => {
   const [projects, setProjects] = useState([]);
   const [filter, setFilter] = useState('all');
   const [editorOpen, setEditorOpen] = useState(false);
@@ -73,7 +73,7 @@ const Showcase = ({ t, lang, isAdmin, onLogout }) => {
       setProjects(DEFAULT_PROJECTS);
       localStorage.setItem('suda_showcase_projects', JSON.stringify(DEFAULT_PROJECTS));
     }
-  }, []);
+  }, [projectsVersion]);
 
   // Save projects to localStorage helper
   const saveProjects = (updatedProjects) => {

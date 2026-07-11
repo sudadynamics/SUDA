@@ -42,6 +42,14 @@ export const translations = {
     toastError: "Lütfen tüm zorunlu alanları doldurun.",
     darkMode: "Koyu Tema",
     lightMode: "Açık Tema",
+    contactPhone: "0551 031 10 29",
+    contactPhoneRaw: "05510311029",
+    contactWhatsApp: "905510311029",
+    contactEmail: "sudadynamics@gmail.com",
+    statProjectsCount: 120,
+    statSatisfactionPercent: 99,
+    statUptimePercent: 99.9,
+    statDevelopersCount: 4,
 
     // Workflow Section
     workflowTitle: "Çalışma Sürecimiz",
@@ -387,6 +395,14 @@ export const translations = {
     adminError: "Invalid Username or Password!",
     adminSuccess: "Login Successful!",
     confirmDelete: "Are you sure you want to delete this project?",
-    noProjects: "No projects to display yet."
+    noProjects: "No projects to display yet.",
+    contactPhone: "0551 031 10 29",
+    contactPhoneRaw: "05510311029",
+    contactWhatsApp: "905510311029",
+    contactEmail: "sudadynamics@gmail.com",
+    statProjectsCount: 120,
+    statSatisfactionPercent: 99,
+    statUptimePercent: 99.9,
+    statDevelopersCount: 4,
   }
 };
