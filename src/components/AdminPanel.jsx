@@ -1529,6 +1529,8 @@ const AdminPanel = ({
                       </div>
                     </div>
                   </>
+                )}
+
                 {/* 5. TESTIMONIAL EDITOR FIELDS */}
                 {editingItem.type === 'testimonial' && (
                   <>
