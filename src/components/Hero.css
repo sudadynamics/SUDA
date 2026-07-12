@@ -399,4 +399,40 @@
   .path-3 { width: 120px; height: 120px; }
   .card-top { right: -5px; }
   .card-bottom { left: -5px; }
+  .card-middle { left: -5px; width: 200px; }
+}
+
+/* Motivation Card & Spin Animations */
+.card-middle {
+  top: 35%;
+  left: -60px;
+  width: 250px;
+  animation: floatCardY 8s infinite ease-in-out;
+}
+
+.motivation-float-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.motivation-float-card:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+}
+
+.motivation-text-tip {
+  white-space: normal !important;
+  line-height: 1.35;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  margin-top: 3px;
+}
+
+.spin-animation {
+  animation: spinIcon 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes spinIcon {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
 }

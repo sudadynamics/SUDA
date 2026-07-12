@@ -7,15 +7,17 @@ import Team from './components/Team';
 import Footer from './components/Footer';
 import FloatingContact from './components/FloatingContact';
 import ContactPopup from './components/ContactPopup';
-import CostCalculator from './components/CostCalculator';
+import DietCalculator from './components/DietCalculator';
+import DietTest from './components/DietTest';
 import Workflow from './components/Workflow';
 import AdminPanel from './components/AdminPanel';
 import Testimonials from './components/Testimonials';
 import AIChatbot from './components/AIChatbot';
-import BrandSlider from './components/BrandSlider';
 import FAQ from './components/FAQ';
+import Blog from './components/Blog';
 import About from './components/About';
 import { translations } from './utils/translations';
+import { defaultDietitianConfig } from './utils/dietitianConfig';
 import './App.css';
 
 function App() {
@@ -77,6 +79,28 @@ function App() {
   });
   const [adminLoginOpen, setAdminLoginOpen] = useState(false);
   const [projectsVersion, setProjectsVersion] = useState(0);
+  const [dietTestOpen, setDietTestOpen] = useState(false);
+
+  const [dietitianConfig, setDietitianConfig] = useState(() => {
+    const stored = localStorage.getItem('suda_dietitian_config');
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        return defaultDietitianConfig;
+      }
+    }
+    return defaultDietitianConfig;
+  });
+
+  useEffect(() => {
+    const stored = localStorage.getItem('suda_dietitian_config');
+    if (stored) {
+      try {
+        setDietitianConfig(JSON.parse(stored));
+      } catch (e) {}
+    }
+  }, [projectsVersion]);
 
   // Custom Cursor Tracker State
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -196,22 +220,30 @@ function App() {
         theme={theme}
         setTheme={setTheme}
         onContactClick={handleOpenContact}
+        dietitianConfig={dietitianConfig}
       />
 
       <main>
         <Hero
           t={t}
+          lang={lang}
           onContactClick={handleOpenContact}
+          onOpenDietTest={() => setDietTestOpen(true)}
+          dietitianConfig={dietitianConfig}
         />
 
-        <BrandSlider />
-
-        <About t={t} />
+        <About 
+          t={t} 
+          lang={lang}
+          dietitianConfig={dietitianConfig}
+        />
 
         <Services
           t={t}
+          lang={lang}
           onInquireService={handleInquireService}
           onOpenCalculator={() => setCalcOpen(true)}
+          dietitianConfig={dietitianConfig}
         />
 
         <Workflow
@@ -227,6 +259,12 @@ function App() {
             sessionStorage.removeItem('suda_admin');
           }}
           projectsVersion={projectsVersion}
+          dietitianConfig={dietitianConfig}
+        />
+
+        <Blog 
+          lang={lang}
+          dietitianConfig={dietitianConfig}
         />
 
         <Testimonials
@@ -236,6 +274,7 @@ function App() {
         <FAQ
           t={t}
           lang={lang}
+          dietitianConfig={dietitianConfig}
         />
 
         <Team
@@ -245,6 +284,7 @@ function App() {
 
       <Footer
         t={t}
+        lang={lang}
         onContactClick={handleOpenContact}
         isAdmin={isAdmin}
         onAdminLoginClick={() => setAdminLoginOpen(true)}
@@ -252,6 +292,7 @@ function App() {
           setIsAdmin(false);
           sessionStorage.removeItem('suda_admin');
         }}
+        dietitianConfig={dietitianConfig}
       />
 
       {isAdmin && (
@@ -287,21 +328,31 @@ function App() {
         t={t}
         lang={lang}
         onCaptureLead={handleCaptureLead}
+        dietitianConfig={dietitianConfig}
       />
 
       <ContactPopup
         isOpen={contactOpen}
         onClose={() => setContactOpen(false)}
         t={t}
+        lang={lang}
         preselectedService={preselectedService}
+        onCaptureLead={handleCaptureLead}
+        dietitianConfig={dietitianConfig}
       />
 
-      <CostCalculator
+      <DietCalculator
         isOpen={calcOpen}
         onClose={() => setCalcOpen(false)}
         t={t}
         lang={lang}
-        onCaptureLead={handleCaptureLead}
+      />
+
+      <DietTest
+        isOpen={dietTestOpen}
+        onClose={() => setDietTestOpen(false)}
+        lang={lang}
+        dietitianConfig={dietitianConfig}
       />
 
       <AdminPanel

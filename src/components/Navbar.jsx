@@ -50,7 +50,7 @@ const Navbar = ({ t, lang, setLang, theme, setTheme, onContactClick }) => {
             <Sparkles className="logo-sparkle" />
           </div>
           <span className="logo-text">
-            SUDA <span className="logo-sub">DYNAMICS</span>
+            SUDA <span className="logo-sub">DİYETİSYEN</span>
           </span>
         </a>
 
@@ -60,19 +60,19 @@ const Navbar = ({ t, lang, setLang, theme, setTheme, onContactClick }) => {
             {t.navHome}
           </a>
           <a href="#about" className="nav-item" onClick={(e) => handleNavClick(e, 'about')}>
-            {t.navAbout}
+            {lang === 'tr' ? 'Hakkımda' : 'About'}
           </a>
           <a href="#services" className="nav-item" onClick={(e) => handleNavClick(e, 'services')}>
-            {t.navServices}
+            {lang === 'tr' ? 'Diyet Paketleri' : 'Diet Packages'}
           </a>
           <a href="#showcase" className="nav-item" onClick={(e) => handleNavClick(e, 'showcase')}>
-            {t.navShowcase}
+            {lang === 'tr' ? 'Tarifler & Başarılar' : 'Recipes & Success'}
           </a>
           <a href="#team" className="nav-item" onClick={(e) => handleNavClick(e, 'team')}>
             {t.navTeam}
           </a>
           <button className="nav-item btn-contact-nav" onClick={onContactClick}>
-            {t.navContact}
+            {lang === 'tr' ? 'Randevu Al' : 'Book Appointment'}
           </button>
         </div>
 
@@ -113,13 +113,13 @@ const Navbar = ({ t, lang, setLang, theme, setTheme, onContactClick }) => {
           {t.navHome}
         </a>
         <a href="#about" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'about')}>
-          {t.navAbout}
+          {lang === 'tr' ? 'Hakkımda' : 'About'}
         </a>
         <a href="#services" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'services')}>
-          {t.navServices}
+          {lang === 'tr' ? 'Diyet Paketleri' : 'Diet Packages'}
         </a>
         <a href="#showcase" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'showcase')}>
-          {t.navShowcase}
+          {lang === 'tr' ? 'Tarifler & Başarılar' : 'Recipes & Success'}
         </a>
         <a href="#team" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'team')}>
           {t.navTeam}
@@ -128,7 +128,7 @@ const Navbar = ({ t, lang, setLang, theme, setTheme, onContactClick }) => {
           className="mobile-nav-item mobile-contact-btn"
           onClick={() => { setIsOpen(false); onContactClick(); }}
         >
-          {t.navContact}
+          {lang === 'tr' ? 'Randevu Al' : 'Book Appointment'}
         </button>
       </div>
     </nav>

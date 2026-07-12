@@ -1,16 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, MessageSquare, Shield, Activity, Star, Users } from 'lucide-react';
+import { ArrowRight, MessageSquare, Shield, Activity, Star, Users, Sparkles } from 'lucide-react';
 import './Hero.css';
 
-const Hero = ({ t, onContactClick }) => {
+const Hero = ({ t, lang, onContactClick, onOpenDietTest, dietitianConfig }) => {
   // Counters for the stats
-  const [stats, setStats] = useState({ projects: 0, satisfaction: 0, uptime: 90.0, devs: 0 });
+  const [stats, setStats] = useState({ projects: 0, satisfaction: 0, weightLoss: 0, experience: 0 });
+  const [currentMotivation, setCurrentMotivation] = useState('');
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const profile = dietitianConfig?.profile || {};
+
+  const motivationTipsTr = [
+    "Dün bitti, bugün sağlıklı beslenmek için yeni bir fırsat! 🌟",
+    "Önemli olan hızlı zayıflamak değil, kalıcı alışkanlıklar edinmektir. 🍏",
+    "Bedeniniz size emanet edilmiş en değerli evinizdir. Onu şifayla besleyin. 🌿",
+    "Yasaklar yerine porsiyon kontrolünü seçerek özgürce zayıflayın. ✨",
+    "Su hayattır! Şu an kalkıp koca bir bardak su içmeye ne dersiniz? 💧",
+    "Yavaş ilerlemek, hiç ilerlememekten çok daha iyidir. Pes etmeyin! 💪",
+    "Sağlıklı beslenmek bir ceza değil, bedeninize sunduğunuz bir ödüldür. ❤️"
+  ];
+
+  const motivationTipsEn = [
+    "Yesterday is gone, today is a fresh chance to eat healthy! 🌟",
+    "It's not about rapid weight loss, it's about building permanent habits. 🍏",
+    "Your body is the only home you have to live in. Nourish it well. 🌿",
+    "Choose portion control over strict bans and lose weight freely. ✨",
+    "Water is life! How about standing up and drinking a big glass of water right now? 💧",
+    "Progress is progress, no matter how slow. Keep going! 💪",
+    "Healthy eating is not a punishment, it is a reward for your body. ❤️"
+  ];
 
   useEffect(() => {
-    const targetProjects = parseInt(t.statProjectsCount) || 120;
-    const targetSatisfaction = parseInt(t.statSatisfactionPercent) || 99;
-    const targetUptime = parseFloat(t.statUptimePercent) || 99.9;
-    const targetDevs = parseInt(t.statDevelopersCount) || 4;
+    setCurrentMotivation(lang === 'tr' ? motivationTipsTr[0] : motivationTipsEn[0]);
+  }, [lang]);
+
+  const shuffleMotivation = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    
+    setTimeout(() => {
+      const tips = lang === 'tr' ? motivationTipsTr : motivationTipsEn;
+      let nextIndex = Math.floor(Math.random() * tips.length);
+      // Ensure we get a different tip if possible
+      while (tips[nextIndex] === currentMotivation && tips.length > 1) {
+        nextIndex = Math.floor(Math.random() * tips.length);
+      }
+      setCurrentMotivation(tips[nextIndex]);
+      setIsSpinning(false);
+    }, 600);
+  };
+
+  useEffect(() => {
+    const targetProjects = 500;
+    const targetSatisfaction = 99;
+    const targetWeightLoss = 2450;
+    const targetExperience = 8;
 
     const duration = 2000;
     const steps = 50;
@@ -22,18 +66,18 @@ const Hero = ({ t, onContactClick }) => {
       setStats({
         projects: Math.floor((targetProjects / steps) * currentStep),
         satisfaction: Math.floor((targetSatisfaction / steps) * currentStep),
-        uptime: parseFloat((90.0 + ((targetUptime - 90.0) / steps) * currentStep).toFixed(1)),
-        devs: Math.min(targetDevs, Math.floor((targetDevs / (steps / 2)) * currentStep))
+        weightLoss: Math.floor((targetWeightLoss / steps) * currentStep),
+        experience: Math.floor((targetExperience / steps) * currentStep)
       });
 
       if (currentStep >= steps) {
-        setStats({ projects: targetProjects, satisfaction: targetSatisfaction, uptime: targetUptime, devs: targetDevs });
+        setStats({ projects: targetProjects, satisfaction: targetSatisfaction, weightLoss: targetWeightLoss, experience: targetExperience });
         clearInterval(timer);
       }
     }, stepTime);
 
     return () => clearInterval(timer);
-  }, [t.statProjectsCount, t.statSatisfactionPercent, t.statUptimePercent, t.statDevelopersCount]);
+  }, [dietitianConfig]);
 
   const handleScrollToServices = (e) => {
     e.preventDefault();
@@ -56,24 +100,30 @@ const Hero = ({ t, onContactClick }) => {
         {/* Left Content */}
         <div className="hero-content">
           <div className="badge-wrapper animate-fade-in">
-            <span className="badge">SUDA DYNAMICS v2.6</span>
+            <span className="badge">SUDA-DİYETİSYEN</span>
           </div>
           
           <h1 className="hero-title animate-slide-up">
-            {t.heroTitlePrefix}
-            <span className="text-gradient highlight-text">{t.heroTitleHighlight}</span>
+            {lang === 'tr' ? 'Sağlıklı Yaşama Adım Atın' : 'Step Into Healthy Living'}
+            <span className="text-gradient highlight-text" style={{ display: 'block', marginTop: '10px' }}>{profile.name}</span>
           </h1>
 
           <p className="hero-description animate-slide-up-delayed">
-            {t.heroSubtitle}
+            {lang === 'tr' ? profile.titleTr : profile.titleEn}
+            <span style={{ display: 'block', marginTop: '10px', fontSize: '1rem', opacity: 0.85, fontWeight: 400 }}>
+              {lang === 'tr' ? profile.bioTr.split('.')[0] + '.' : profile.bioEn.split('.')[0] + '.'}
+            </span>
           </p>
 
           <div className="hero-actions animate-fade-in-delayed">
             <button className="btn-primary hero-btn-main" onClick={onContactClick}>
-              {t.heroCTA1} <MessageSquare size={18} />
+              {lang === 'tr' ? 'Randevu Al' : 'Book Appointment'} <MessageSquare size={18} />
+            </button>
+            <button className="btn-secondary hero-btn-sub" onClick={onOpenDietTest}>
+              {lang === 'tr' ? 'En Uygun Diyet Testi' : 'Diet Fit Test'} <Sparkles size={18} />
             </button>
             <button className="btn-secondary hero-btn-sub" onClick={handleScrollToServices}>
-              {t.heroCTA2} <ArrowRight size={18} />
+              {lang === 'tr' ? 'Diyet Paketleri' : 'Diet Packages'} <ArrowRight size={18} />
             </button>
           </div>
         </div>
@@ -94,9 +144,8 @@ const Hero = ({ t, onContactClick }) => {
               <div className="node node-purple"><Shield size={14} /></div>
             </div>
 
-            <div className="visual-core">
-              <div className="core-inner">
-                <span className="core-logo">SD</span>
+            <div className="visual-core" style={{ overflow: 'hidden' }}>
+              <div className="core-inner" style={{ background: `url(${profile.image}) center/cover no-repeat`, width: '100%', height: '100%', borderRadius: '50%' }}>
               </div>
             </div>
 
@@ -105,20 +154,36 @@ const Hero = ({ t, onContactClick }) => {
             <div className="visual-connector line-2"></div>
             <div className="visual-connector line-3"></div>
 
-            {/* Mini Float card */}
+            {/* Float Cards */}
             <div className="float-card glass card-top">
               <div className="float-card-icon purple"><Users size={16} /></div>
               <div>
-                <p className="float-card-title">Dev Team</p>
-                <p className="float-card-desc">4 Active Creators</p>
+                <p className="float-card-title">{lang === 'tr' ? 'Aktif Danışan' : 'Active Clients'}</p>
+                <p className="float-card-desc">150+ {lang === 'tr' ? 'Kişi' : 'People'}</p>
+              </div>
+            </div>
+
+            {/* Middle Motivation Shuffle Card */}
+            <div 
+              className="float-card glass card-middle motivation-float-card" 
+              onClick={shuffleMotivation} 
+              style={{ cursor: 'pointer' }}
+              title={lang === 'tr' ? 'Tıklayarak ipucunu değiştir' : 'Click to shuffle tip'}
+            >
+              <div className="float-card-icon gold">
+                <Sparkles size={16} className={isSpinning ? 'spin-animation' : ''} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <p className="float-card-title">{lang === 'tr' ? 'Günün Motivasyonu ⚡' : 'Daily Motivation ⚡'}</p>
+                <p className="float-card-desc motivation-text-tip">{currentMotivation}</p>
               </div>
             </div>
 
             <div className="float-card glass card-bottom">
               <div className="float-card-icon turquoise"><Activity size={16} /></div>
               <div>
-                <p className="float-card-title">Integrations</p>
-                <p className="float-card-desc">99.9% Reliable API</p>
+                <p className="float-card-title">{lang === 'tr' ? 'Toplam Zayıflama' : 'Total Loss'}</p>
+                <p className="float-card-desc">2.4 {lang === 'tr' ? 'Ton Yağ' : 'Tons of Fat'}</p>
               </div>
             </div>
           </div>
@@ -130,22 +195,22 @@ const Hero = ({ t, onContactClick }) => {
         <div className="hero-stats glass">
           <div className="stat-item">
             <h3 className="stat-number text-gradient">{stats.projects}+</h3>
-            <p className="stat-label">{t.statProjects}</p>
+            <p className="stat-label">{lang === 'tr' ? 'Başarılı Danışan' : 'Successful Clients'}</p>
           </div>
           <div className="stat-separator"></div>
           <div className="stat-item">
             <h3 className="stat-number text-gradient">%{stats.satisfaction}</h3>
-            <p className="stat-label">{t.statSatisfaction}</p>
+            <p className="stat-label">{lang === 'tr' ? 'Danışan Memnuniyeti' : 'Client Satisfaction'}</p>
           </div>
           <div className="stat-separator"></div>
           <div className="stat-item">
-            <h3 className="stat-number text-gradient">%{stats.uptime}</h3>
-            <p className="stat-label">{t.statUptime}</p>
+            <h3 className="stat-number text-gradient">{stats.weightLoss}+ kg</h3>
+            <p className="stat-label">{lang === 'tr' ? 'Kilo Kaybı' : 'Total Weight Lost'}</p>
           </div>
           <div className="stat-separator"></div>
           <div className="stat-item">
-            <h3 className="stat-number text-gradient">{stats.devs}</h3>
-            <p className="stat-label">{t.statDevelopers}</p>
+            <h3 className="stat-number text-gradient">{stats.experience}+ Yıl</h3>
+            <p className="stat-label">{lang === 'tr' ? 'Deneyim Süresi' : 'Years Experience'}</p>
           </div>
         </div>
       </div>

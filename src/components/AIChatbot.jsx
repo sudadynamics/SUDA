@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send, Bot, User, Sparkles, SendHorizontal } from 'lucide-react';
 import './AIChatbot.css';
 
-const AIChatbot = ({ t, lang, onCaptureLead }) => {
+const AIChatbot = ({ t, lang, onCaptureLead, dietitianConfig }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   
   const chatEndRef = useRef(null);
+
+  const profile = dietitianConfig?.profile || {};
 
   // Auto-scroll to bottom of chat
   useEffect(() => {
@@ -20,13 +22,13 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
   // Load welcome message on mount or language change
   useEffect(() => {
     const welcome = lang === 'tr' 
-      ? "Merhaba! Ben Suda AI. Suda Dynamics yazılım çözümleri hakkında merak ettiğiniz her şeyi bana sorabilirsiniz. Projelerimiz, fiyatlar veya 2 haftalık teslimat garantimiz hakkında ne öğrenmek istersiniz?"
-      : "Hello! I am Suda AI. You can ask me anything about Suda Dynamics software solutions. What would you like to know about our projects, prices, or 2-week delivery pledge?";
+      ? `Merhaba! Ben SUDA Diyet Asistanı. Sağlıklı beslenme, diyet programlarımız, kaloriler veya randevu süreçlerimiz hakkında merak ettiğiniz her şeyi bana sorabilirsiniz. Size nasıl yardımcı olabilirim?`
+      : `Hello! I am SUDA Diet Assistant. You can ask me anything about healthy nutrition, our diet programs, calories, or booking appointments. How can I help you today?`;
     
     setMessages([
       { id: 1, sender: 'bot', text: welcome, time: new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }) }
     ]);
-  }, [lang]);
+  }, [lang, dietitianConfig]);
 
   const handleSendMessage = async (textToSend) => {
     if (!textToSend.trim()) return;
@@ -44,12 +46,17 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
     
     if ((emailMatch || phoneMatch) && onCaptureLead) {
       const contactVal = (emailMatch ? emailMatch[0] : '') + ' ' + (phoneMatch ? phoneMatch[0] : '');
+      
+      const detailsObj = {
+        goal: 'Chatbot Başvurusu',
+        message: `Sohbet girdisi: "${textToSend}"`
+      };
+
       onCaptureLead({
         name: 'Chatbot Ziyaretçisi',
         contact: contactVal.trim() || textToSend,
         source: 'Chatbot',
-        budget: 'Belirtilmedi',
-        details: `Sohbet girdisi: "${textToSend}"`
+        details: JSON.stringify(detailsObj)
       });
     }
 
@@ -65,51 +72,51 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
     }, 1000);
   };
 
-  // Rule-based client side response matching (Fallback)
+  // Rule-based dietitian response matching
   const generateBotResponse = (query) => {
     const q = query.toLowerCase();
 
     if (lang === 'tr') {
-      if (q.includes('fiyat') || q.includes('ücret') || q.includes('maliyet') || q.includes('para') || q.includes('tutar') || q.includes('teklif')) {
-        return "Suda Dynamics olarak projelerimizi tipine, ölçeğine ve teslimat hızına göre şeffaf bir şekilde fiyatlandırıyoruz. Web sitelerimiz ortalama 15.000 ₺, mobil uygulamalarımız ise 28.000 ₺'den başlamaktadır. Detaylı bütçe hesabı için sitemizdeki 'Proje Süre Hesaplayıcı' aracını kullanabilirsiniz!";
+      if (q.includes('fiyat') || q.includes('ücret') || q.includes('maliyet') || q.includes('para') || q.includes('tutar') || q.includes('teklif') || q.includes('paket')) {
+        return "SUDA-DİYETİSYEN bünyesinde online diyet, kilo yönetimi, sporcu beslenmesi ve kurumsal danışmanlık hizmetleri sunuyoruz. Fiyatlarımız seçilen paketin süresine ve içeriğine göre değişiklik gösterir. Detaylı analizleriniz için sitemizdeki 'Diyet Hesaplama Araçları'nı kullanabilir, WhatsApp üzerinden doğrudan teklif alabilirsiniz!";
       }
-      if (q.includes('süre') || q.includes('zaman') || q.includes('gün') || q.includes('ne kadar') || q.includes('teslim')) {
-        return "Bizim en büyük sözümüz hızdır! Tüm otomasyon, web, mobil ve entegrasyon projelerimizi en geç 14 GÜN (2 hafta) içerisinde tam çalışır durumda teslim ediyoruz. Gecikme halinde koşulsuz iade sağlıyoruz.";
+      if (q.includes('tarif') || q.includes('yemek') || q.includes('tatlı') || q.includes('atıştırmalık') || q.includes('lapası') || q.includes('ne yesem')) {
+        return `Diyetisyenimiz ${profile.name} tarafından hazırlanan sağlıklı ve düşük kalorili tariflerimize sitemizdeki 'Tarifler & Başarılar' sekmesinden ulaşabilirsiniz. Yulaf lapasından, fırında çıtır nohut cipsine kadar lezzetli fit alternatifler sizi bekliyor!`;
       }
-      if (q.includes('hizmet') || q.includes('neler yapıyorsunuz') || q.includes('ne iş') || q.includes('uzmanlık')) {
-        return "Suda Dynamics 4 ana alanda uzmanlaşmıştır: \n1. Endüstriyel & Süreç Otomasyonu (Python, Node.js)\n2. Sistem & API Entegrasyonları (REST, GraphQL, Logo ERP)\n3. Mobil Uygulama Geliştirme (React Native, Flutter)\n4. Web & E-Ticaret (Next.js, React, SEO).\nHangi alanla ilgileniyorsunuz?";
+      if (q.includes('su') || q.includes('ne kadar su') || q.includes('litresi') || q.includes('sıvı')) {
+        return "Sağlıklı bir yaşam için günlük su tüketimi kilo başına yaklaşık 33 ml olmalıdır. Günlük egzersiz yaptığınız her saat için ise bu miktara ekstra 500 ml eklemeniz önerilir. Sitemizdeki 'Diyet Hesaplama Araçları'nda yer alan Su Hesaplayıcıyı kullanarak kilonuza özel su ihtiyacınızı hemen öğrenebilirsiniz!";
       }
-      if (q.includes('ekip') || q.includes('kimler') || q.includes('çalışan') || q.includes('kurucu')) {
-        return "Ekibimiz alanında uzman 4 kişiden oluşmaktadır:\n- Zehra Abacı: Kurucu & Proje Yöneticisi\n- Gizay Duru: Müşteri İlişkileri & Asistan\n- Furkan Uçar: Kıdemli Mobil & Web Geliştirici\n- Selahattin Sarıbay: Kıdemli Otomasyon & Entegrasyon Uzmanı.";
+      if (q.includes('kimdir') || q.includes('diyetisyen') || q.includes('zehra') || q.includes('özgeçmiş') || q.includes('biyografi')) {
+        return `Diyetisyenimiz ${profile.name}, sağlıklı yaşamı sürdürülebilir kılma felsefesiyle online ve yüz yüze beslenme danışmanlığı yürütmektedir. Fonksiyonel tıp beslenmesi ve kilo kontrolü alanında uzmandır. Kendisi hakkında detaylı bilgiye sitemizdeki 'Hakkımda' bölümünden erişebilirsiniz.`;
       }
-      if (q.includes('iletişim') || q.includes('telefon') || q.includes('whatsapp') || q.includes('mail') || q.includes('e-posta')) {
-        return `Bizimle doğrudan iletişime geçebilirsiniz:\n📞 Telefon/WhatsApp: ${t.contactPhone || '0551 031 10 29'}\n✉️ E-posta: ${t.contactEmail || 'sudadynamics@gmail.com'}\nİletişim formunu doldurarak da bize yazabilirsiniz.`;
+      if (q.includes('randevu') || q.includes('görüşme') || q.includes('başvuru') || q.includes('iletişim') || q.includes('telefon') || q.includes('whatsapp') || q.includes('ulaşabilirim')) {
+        return `Bizimle iletişime geçmek ve randevu planlamak çok kolay:\n📞 Telefon/WhatsApp: ${profile.phone || '0551 031 10 29'}\n✉️ E-posta: ${profile.email || 'dyt.zehraabaci@gmail.com'}\n\nDilerseniz sağ üstteki 'Randevu Al' butonuna tıklayarak boy, kilo ve yaş bilgilerinizi bırakabilirsiniz; ${profile.name} size WhatsApp üzerinden özel bir planlamayla geri dönecektir.`;
       }
       if (q.includes('@') || q.match(/[0-9]{9,12}/)) {
-        return "İletişim bilgilerinizi kaydettim! Müşteri ilişkileri yöneticimiz Gizay Duru en geç 24 saat içinde sizinle iletişime geçecektir. Teşekkür ederiz! 😊";
+        return `İletişim bilgilerinizi kaydettim! Diyetisyenimiz ${profile.name} en kısa sürede sizinle iletişime geçerek sağlıklı yaşam planınızı başlatacaktır. Sağlıklı günler dileriz! 😊`;
       }
-      return "Anladım. Suda Dynamics hakkında daha spesifik bir bilgi almak isterseniz; hizmetlerimiz, teslimat süremiz (maksimum 14 gün) veya tahmini fiyatlarımız hakkında sorular sorabilirsiniz. Dilerseniz iletişim bilgilerinizi buraya yazarak bizim sizi aramamızı isteyebilirsiniz!";
+      return `SUDA Diyet Asistanı olarak size sağlıklı tarifler, su tüketimi, ideal kilo analizi, diyet paketlerimiz veya randevular konusunda yardımcı olabilirim. Lütfen öğrenmek istediğiniz konuyu yazın!`;
     } 
     else {
-      if (q.includes('price') || q.includes('cost') || q.includes('budget') || q.includes('how much') || q.includes('quote')) {
-        return "At Suda Dynamics, we value transparency. Web projects start at $600, while mobile applications start at $1,200. You can calculate a customized breakdown using the 'Timeline Calculator' tool on our website!";
+      if (q.includes('price') || q.includes('cost') || q.includes('package') || q.includes('budget') || q.includes('how much') || q.includes('quote')) {
+        return "We offer online diet coaching, weight management, sports nutrition, and corporate consulting. Package prices vary based on program details and duration. You can check our 'Diet Calculator' or ask for a direct quote via WhatsApp!";
       }
-      if (q.includes('time') || q.includes('how long') || q.includes('duration') || q.includes('delivery') || q.includes('days')) {
-        return "Speed is our promise! We deliver all web, mobile, automation, and integration projects in 14 DAYS (2 weeks) maximum. If we fail, we offer a full refund guarantee.";
+      if (q.includes('recipe') || q.includes('meal') || q.includes('food') || q.includes('eat') || q.includes('snack')) {
+        return `You can explore delicious, low-calorie diet recipes prepared by ${profile.name} directly under our 'Recipes & Success' tab on the homepage. Happy cooking!`;
       }
-      if (q.includes('service') || q.includes('expertise') || q.includes('what do you do')) {
-        return "We specialize in 4 main areas:\n1. Industrial & Process Automation\n2. System & API Integrations\n3. Mobile App Development\n4. Web & E-Commerce Development.\nWhich of these matches your project needs?";
+      if (q.includes('water') || q.includes('how much water') || q.includes('drink') || q.includes('liter')) {
+        return "For an active metabolism, you should drink about 33ml of water per kg of body weight. Add an extra 500ml for each hour of exercise. Try the Water Intake tab in our Diet Calculator to get your custom amount!";
       }
-      if (q.includes('team') || q.includes('who are') || q.includes('members')) {
-        return "Our core team consists of 4 experts:\n- Zehra Abaci: Founder & PM\n- Gizay Duru: Client Relations & Assistant\n- Furkan Ucar: Senior Mobile & Web Developer\n- Selahattin Saribay: Senior Automation & Integration Expert.";
+      if (q.includes('who') || q.includes('dietitian') || q.includes('zehra') || q.includes('about') || q.includes('bio')) {
+        return `Our specialist dietitian ${profile.name} focuses on sustainable eating models. She offers both online and clinical support. You can read her biography under the 'About Me' section of our website.`;
       }
-      if (q.includes('contact') || q.includes('phone') || q.includes('whatsapp') || q.includes('email') || q.includes('mail')) {
-        return `Feel free to reach us directly:\n📞 Tel/WhatsApp: ${t.contactPhone || '0551 031 10 29'}\n✉️ Email: ${t.contactEmail || 'sudadynamics@gmail.com'}\nYou can also use the contact form modal on the site.`;
+      if (q.includes('appointment') || q.includes('book') || q.includes('consultation') || q.includes('contact') || q.includes('phone') || q.includes('whatsapp')) {
+        return `Booking a consultation with us is simple:\n📞 Call/WhatsApp: ${profile.phone || '0551 031 10 29'}\n✉️ Email: ${profile.email || 'dyt.zehraabaci@gmail.com'}\nYou can click 'Book Appointment' at the top right to share your physical metrics, and we'll reach out to schedule your plan!`;
       }
       if (q.includes('@') || q.match(/[0-9]{9,12}/)) {
-        return "I've saved your contact details! Our customer relationship manager Gizay Duru will contact you within 24 hours. Thank you! 😊";
+        return `I've saved your details! Our dietitian ${profile.name} will reach out to you shortly to map out your health journey. Have a wonderful day! 😊`;
       }
-      return "Got it. Feel free to ask about our services, the 14-day delivery pledge, pricing, or leave your phone/email here so we can get in touch with you!";
+      return "As your SUDA Diet Assistant, I can guide you on healthy recipes, daily water intake, BMR/BMI calculations, or help you schedule a dietitian consultation. How can I help you today?";
     }
   };
 
@@ -123,8 +130,8 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
       <button 
         className={`chatbot-float-btn ${isOpen ? 'active' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
-        title="Suda AI Assistant"
-        aria-label="Suda AI Assistant"
+        title={lang === 'tr' ? 'Suda Diyet Asistanı' : 'Suda Diet Assistant'}
+        aria-label={lang === 'tr' ? 'Suda Diyet Asistanı' : 'Suda Diet Assistant'}
       >
         {isOpen ? <X size={22} /> : <MessageSquare size={22} />}
         {!isOpen && (
@@ -142,7 +149,7 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
                 <Bot size={18} />
               </div>
               <div>
-                <h4 className="bot-title">Suda AI</h4>
+                <h4 className="bot-title">{lang === 'tr' ? 'SUDA Diyet Asistanı' : 'SUDA Diet Assistant'}</h4>
                 <p className="bot-status"><span className="status-dot"></span> Online</p>
               </div>
             </div>
@@ -159,7 +166,7 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
                   {msg.sender === 'bot' ? <Bot size={14} /> : <User size={14} />}
                 </div>
                 <div className="message-bubble">
-                  <p className="message-text">{msg.text}</p>
+                  <p className="message-text" style={{ whiteSpace: 'pre-line' }}>{msg.text}</p>
                   <span className="message-time">{msg.time}</span>
                 </div>
               </div>
@@ -188,35 +195,35 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
           <div className="chatbot-suggestions">
             <button 
               onClick={() => handleQuickQuestion(
+                lang === 'tr' ? 'randevu' : 'appointment', 
+                lang === 'tr' ? 'Randevu Nasıl Alınır? 📅' : 'How to Book? 📅'
+              )}
+            >
+              {lang === 'tr' ? 'Randevu Al 📅' : 'How to Book 📅'}
+            </button>
+            <button 
+              onClick={() => handleQuickQuestion(
+                lang === 'tr' ? 'su' : 'water', 
+                lang === 'tr' ? 'Su İhtiyacım Ne Kadar? 💧' : 'How much water? 💧'
+              )}
+            >
+              {lang === 'tr' ? 'Su İhtiyacı 💧' : 'Water Needs 💧'}
+            </button>
+            <button 
+              onClick={() => handleQuickQuestion(
+                lang === 'tr' ? 'tarif' : 'recipe', 
+                lang === 'tr' ? 'Diyet Tarifleri Nerede? 🥗' : 'Where are recipes? 🥗'
+              )}
+            >
+              {lang === 'tr' ? 'Tarifler 🥗' : 'Diet Recipes 🥗'}
+            </button>
+            <button 
+              onClick={() => handleQuickQuestion(
                 lang === 'tr' ? 'fiyat' : 'price', 
-                lang === 'tr' ? 'Fiyat Hesaplama? ⚡' : 'Pricing Estimate? ⚡'
+                lang === 'tr' ? 'Diyet Paket Fiyatları? 💳' : 'Package Prices? 💳'
               )}
             >
-              {lang === 'tr' ? 'Fiyat Hesapla ⚡' : 'Pricing Estimate ⚡'}
-            </button>
-            <button 
-              onClick={() => handleQuickQuestion(
-                lang === 'tr' ? 'süre' : 'time', 
-                lang === 'tr' ? 'Teslimat Süresi? 📅' : 'Delivery Timeline? 📅'
-              )}
-            >
-              {lang === 'tr' ? 'Teslimat Süresi? 📅' : 'Delivery Timeline? 📅'}
-            </button>
-            <button 
-              onClick={() => handleQuickQuestion(
-                lang === 'tr' ? 'hizmet' : 'service', 
-                lang === 'tr' ? 'Hizmet Alanlarınız? ⚙️' : 'Our Services? ⚙️'
-              )}
-            >
-              {lang === 'tr' ? 'Hizmetler Neler? ⚙️' : 'Our Services? ⚙️'}
-            </button>
-            <button 
-              onClick={() => handleQuickQuestion(
-                lang === 'tr' ? 'iletişim' : 'contact', 
-                lang === 'tr' ? 'İletişime Geç 💬' : 'Contact Us 💬'
-              )}
-            >
-              {lang === 'tr' ? 'İletişime Geç 💬' : 'Contact Us 💬'}
+              {lang === 'tr' ? 'Paket Fiyatları 💳' : 'Package Prices 💳'}
             </button>
           </div>
 
@@ -230,7 +237,7 @@ const AIChatbot = ({ t, lang, onCaptureLead }) => {
           >
             <input
               type="text"
-              placeholder={lang === 'tr' ? 'Mesajınızı yazın...' : 'Type a message...'}
+              placeholder={lang === 'tr' ? 'Diyet asistanına sorun...' : 'Ask diet assistant...'}
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
             />
