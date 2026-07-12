@@ -2,8 +2,31 @@ export const translations = {
   tr: {
     navHome: "Ana Sayfa",
     navServices: "Hizmetlerimiz",
+    navAbout: "Hakkımızda",
     navTeam: "Ekibimiz",
     navContact: "İletişime Geç",
+    aboutTitle: "Hakkımızda",
+    aboutSubtitle: "Geleceğin teknolojisini, hız ve estetikle bugünden inşa ediyoruz.",
+    aboutText: "Suda Dynamics, modern işletmelerin dijital dönüşüm süreçlerini hızlandırmak amacıyla kurulmuş yeni nesil bir yazılım stüdyosudur. Otomasyon, sistem entegrasyonu, mobil ve web çözümlerinde uzmanlaşmış ekibimizle, karmaşık projeleri en geç 2 hafta içinde çalışır durumda teslim ediyoruz. Kaliteli kod, kusursuz entegrasyon ve göz alıcı arayüzler tasarlayarak işinizi geleceğe hazırlıyoruz.",
+    visionTitle: "Vizyonumuz",
+    visionText: "Yazılım dünyasında hız, güven ve premium tasarım standartlarını yeniden tanımlayarak, işletmelerin dijital çağda sınırları aşmasını sağlayan küresel bir teknoloji ortağı olmak.",
+    missionTitle: "Misyonumuz",
+    missionText: "Müşterilerimize taahhüt ettiğimiz 14 günlük maksimum teslim süresi içerisinde, sıfır hata ve en yüksek performans standartlarında yazılım üreterek, dijitalleşme süreçlerindeki tüm engelleri ortadan kaldırmak.",
+    valuesTitle: "Temel Değerlerimiz",
+    valuesData: [
+      {
+        title: "Maksimum Hız",
+        desc: "İşinizin beklemeye tahammülü olmadığını biliyoruz. Tüm projelerinizi en geç 2 hafta içinde teslim ediyoruz."
+      },
+      {
+        title: "Premium Kalite",
+        desc: "Sadece çalışan değil; hızlı, güvenli, temiz kodlanmış ve modern tasarımlı yazılımlar geliştiriyoruz."
+      },
+      {
+        title: "Uçtan Uca Güven",
+        desc: "API'lardan veri tabanlarına kadar tüm entegrasyonları veri kaybı olmadan, güvenle gerçekleştiriyoruz."
+      }
+    ],
     heroTitlePrefix: "Suda Dynamics ile ",
     heroTitleHighlight: "Geleceği İnşa Edin",
     heroSubtitle: "İleri düzey otomasyon, entegrasyon, mobil ve web çözümleri ile işletmenizi dijital dünyada zirveye taşıyoruz. Kusursuz kod, hızlı entegrasyon ve göz alıcı arayüzler sunuyoruz. En geç 2 hafta içinde projenizi çalışır durumda teslim alırsınız.",
@@ -257,8 +280,31 @@ export const translations = {
   en: {
     navHome: "Home",
     navServices: "Services",
+    navAbout: "About Us",
     navTeam: "Team",
     navContact: "Contact Us",
+    aboutTitle: "About Us",
+    aboutSubtitle: "We build the technology of tomorrow, today, with speed and elegance.",
+    aboutText: "Suda Dynamics is a next-generation software studio founded to accelerate the digital transformation of modern businesses. Specializing in automation, system integration, mobile, and web solutions, our team delivers complex projects within 2 weeks maximum. By designing high-quality code, flawless integrations, and stunning interfaces, we prepare your business for the future.",
+    visionTitle: "Our Vision",
+    visionText: "To be a global technology partner that redefines speed, trust, and premium design standards in the software world, enabling businesses to push boundaries in the digital era.",
+    missionTitle: "Our Mission",
+    missionText: "To remove all obstacles in digitalization by producing zero-defect and high-performance software within our committed maximum delivery timeframe of 14 days.",
+    valuesTitle: "Our Core Values",
+    valuesData: [
+      {
+        title: "Maximum Speed",
+        desc: "We know your business cannot wait. We deliver all your projects within a maximum of 2 weeks."
+      },
+      {
+        title: "Premium Quality",
+        desc: "We don't just build working software; we write clean, secure, high-performance code with modern UI designs."
+      },
+      {
+        title: "End-to-End Trust",
+        desc: "We secure all your API and database integrations safely, without any risk of data loss."
+      }
+    ],
     heroTitlePrefix: "Build the Future with ",
     heroTitleHighlight: "Suda Dynamics",
     heroSubtitle: "We boost your business in the digital space with high-level automation, integration, mobile, and web solutions. We offer seamless code, fast integration, and eye-catching user interfaces. Your project is delivered in 2 weeks maximum.",

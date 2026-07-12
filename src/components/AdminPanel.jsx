@@ -107,6 +107,13 @@ const AdminPanel = ({
     alert('Genel içerikler başarıyla kaydedildi!');
   };
 
+  // Save About/Vision/Mission/Values inputs
+  const handleSaveAbout = (e) => {
+    e.preventDefault();
+    saveTranslations(localTr, localEn);
+    alert('Hakkımızda, Vizyon ve Misyon içerikleri başarıyla kaydedildi!');
+  };
+
   // Save Contacts & Stats inputs
   const handleSaveContactsStats = (e) => {
     e.preventDefault();
@@ -630,6 +637,13 @@ const AdminPanel = ({
               <span>Genel / Hero</span>
             </button>
             <button 
+              className={`sidebar-tab-btn ${activeTab === 'about' ? 'active' : ''}`}
+              onClick={() => setActiveTab('about')}
+            >
+              <Users size={16} />
+              <span>Hakkımızda / Vizyon</span>
+            </button>
+            <button 
               className={`sidebar-tab-btn ${activeTab === 'services' ? 'active' : ''}`}
               onClick={() => setActiveTab('services')}
             >
@@ -690,6 +704,256 @@ const AdminPanel = ({
           {/* Main Form Content */}
           <div className="dashboard-main-content">
             
+            {/* TAB: ABOUT & VISION & MISSION */}
+            {activeTab === 'about' && (
+              <form onSubmit={handleSaveAbout} className="tab-form">
+                <h4 className="tab-title-heading">Hakkımızda, Vizyon ve Misyon Bölümü</h4>
+                
+                <div className="form-translation-grid">
+                  {/* Turkish inputs */}
+                  <div className="lang-col">
+                    <span className="lang-indicator">Türkçe</span>
+                    
+                    <div className="form-field">
+                      <label>Navbar Linki</label>
+                      <input 
+                        type="text" 
+                        value={localTr.navAbout || ''} 
+                        onChange={e => setLocalTr({...localTr, navAbout: e.target.value})} 
+                      />
+                    </div>
+                    
+                    <div className="form-field">
+                      <label>Bölüm Başlığı</label>
+                      <input 
+                        type="text" 
+                        value={localTr.aboutTitle || ''} 
+                        onChange={e => setLocalTr({...localTr, aboutTitle: e.target.value})} 
+                      />
+                    </div>
+                    
+                    <div className="form-field">
+                      <label>Bölüm Alt Başlığı</label>
+                      <input 
+                        type="text" 
+                        value={localTr.aboutSubtitle || ''} 
+                        onChange={e => setLocalTr({...localTr, aboutSubtitle: e.target.value})} 
+                      />
+                    </div>
+                    
+                    <div className="form-field">
+                      <label>Hakkımızda Açıklama Yazısı</label>
+                      <textarea 
+                        rows="5"
+                        value={localTr.aboutText || ''} 
+                        onChange={e => setLocalTr({...localTr, aboutText: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Vizyon Başlığı</label>
+                      <input 
+                        type="text" 
+                        value={localTr.visionTitle || ''} 
+                        onChange={e => setLocalTr({...localTr, visionTitle: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Vizyon Açıklaması</label>
+                      <textarea 
+                        rows="3"
+                        value={localTr.visionText || ''} 
+                        onChange={e => setLocalTr({...localTr, visionText: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Misyon Başlığı</label>
+                      <input 
+                        type="text" 
+                        value={localTr.missionTitle || ''} 
+                        onChange={e => setLocalTr({...localTr, missionTitle: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Misyon Açıklaması</label>
+                      <textarea 
+                        rows="3"
+                        value={localTr.missionText || ''} 
+                        onChange={e => setLocalTr({...localTr, missionText: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Değerler Başlığı</label>
+                      <input 
+                        type="text" 
+                        value={localTr.valuesTitle || ''} 
+                        onChange={e => setLocalTr({...localTr, valuesTitle: e.target.value})} 
+                      />
+                    </div>
+
+                    {/* Values array */}
+                    {localTr.valuesData && localTr.valuesData.map((val, idx) => (
+                      <div key={idx} style={{ marginTop: '15px', padding: '15px', border: '1px solid var(--border-color)', borderRadius: '10px', background: 'rgba(255,255,255,0.02)' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--accent-purple)' }}>Değer {idx + 1}</span>
+                        <div className="form-field" style={{ marginTop: '10px' }}>
+                          <label>Değer Başlığı</label>
+                          <input 
+                            type="text" 
+                            value={val.title || ''} 
+                            onChange={e => {
+                              const newValData = [...localTr.valuesData];
+                              newValData[idx] = { ...newValData[idx], title: e.target.value };
+                              setLocalTr({...localTr, valuesData: newValData});
+                            }} 
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Değer Açıklaması</label>
+                          <textarea 
+                            rows="2"
+                            value={val.desc || ''} 
+                            onChange={e => {
+                              const newValData = [...localTr.valuesData];
+                              newValData[idx] = { ...newValData[idx], desc: e.target.value };
+                              setLocalTr({...localTr, valuesData: newValData});
+                            }} 
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* English inputs */}
+                  <div className="lang-col">
+                    <span className="lang-indicator">English</span>
+                    
+                    <div className="form-field">
+                      <label>Navbar Link</label>
+                      <input 
+                        type="text" 
+                        value={localEn.navAbout || ''} 
+                        onChange={e => setLocalEn({...localEn, navAbout: e.target.value})} 
+                      />
+                    </div>
+                    
+                    <div className="form-field">
+                      <label>Section Title</label>
+                      <input 
+                        type="text" 
+                        value={localEn.aboutTitle || ''} 
+                        onChange={e => setLocalEn({...localEn, aboutTitle: e.target.value})} 
+                      />
+                    </div>
+                    
+                    <div className="form-field">
+                      <label>Section Subtitle</label>
+                      <input 
+                        type="text" 
+                        value={localEn.aboutSubtitle || ''} 
+                        onChange={e => setLocalEn({...localEn, aboutSubtitle: e.target.value})} 
+                      />
+                    </div>
+                    
+                    <div className="form-field">
+                      <label>About Us Description Text</label>
+                      <textarea 
+                        rows="5"
+                        value={localEn.aboutText || ''} 
+                        onChange={e => setLocalEn({...localEn, aboutText: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Vision Title</label>
+                      <input 
+                        type="text" 
+                        value={localEn.visionTitle || ''} 
+                        onChange={e => setLocalEn({...localEn, visionTitle: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Vision Description</label>
+                      <textarea 
+                        rows="3"
+                        value={localEn.visionText || ''} 
+                        onChange={e => setLocalEn({...localEn, visionText: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Mission Title</label>
+                      <input 
+                        type="text" 
+                        value={localEn.missionTitle || ''} 
+                        onChange={e => setLocalEn({...localEn, missionTitle: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Mission Description</label>
+                      <textarea 
+                        rows="3"
+                        value={localEn.missionText || ''} 
+                        onChange={e => setLocalEn({...localEn, missionText: e.target.value})} 
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>Values Title</label>
+                      <input 
+                        type="text" 
+                        value={localEn.valuesTitle || ''} 
+                        onChange={e => setLocalEn({...localEn, valuesTitle: e.target.value})} 
+                      />
+                    </div>
+
+                    {/* Values array */}
+                    {localEn.valuesData && localEn.valuesData.map((val, idx) => (
+                      <div key={idx} style={{ marginTop: '15px', padding: '15px', border: '1px solid var(--border-color)', borderRadius: '10px', background: 'rgba(255,255,255,0.02)' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--accent-purple)' }}>Value {idx + 1}</span>
+                        <div className="form-field" style={{ marginTop: '10px' }}>
+                          <label>Value Title</label>
+                          <input 
+                            type="text" 
+                            value={val.title || ''} 
+                            onChange={e => {
+                              const newValData = [...localEn.valuesData];
+                              newValData[idx] = { ...newValData[idx], title: e.target.value };
+                              setLocalEn({...localEn, valuesData: newValData});
+                            }} 
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Value Description</label>
+                          <textarea 
+                            rows="2"
+                            value={val.desc || ''} 
+                            onChange={e => {
+                              const newValData = [...localEn.valuesData];
+                              newValData[idx] = { ...newValData[idx], desc: e.target.value };
+                              setLocalEn({...localEn, valuesData: newValData});
+                            }} 
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="tab-form-actions">
+                  <button type="submit" className="btn-save-tab">
+                    <Save size={16} />
+                    <span>Kaydet</span>
+                  </button>
+                </div>
+              </form>
+            )}
+
             {/* TAB 1: GENERAL & HERO */}
             {activeTab === 'general' && (
               <form onSubmit={handleSaveGeneral} className="tab-form">

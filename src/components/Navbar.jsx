@@ -59,6 +59,9 @@ const Navbar = ({ t, lang, setLang, theme, setTheme, onContactClick }) => {
           <a href="#hero" className="nav-item" onClick={(e) => handleNavClick(e, 'hero')}>
             {t.navHome}
           </a>
+          <a href="#about" className="nav-item" onClick={(e) => handleNavClick(e, 'about')}>
+            {t.navAbout}
+          </a>
           <a href="#services" className="nav-item" onClick={(e) => handleNavClick(e, 'services')}>
             {t.navServices}
           </a>
@@ -108,6 +111,9 @@ const Navbar = ({ t, lang, setLang, theme, setTheme, onContactClick }) => {
       <div className={`mobile-nav glass ${isOpen ? 'open' : ''}`}>
         <a href="#hero" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'hero')}>
           {t.navHome}
+        </a>
+        <a href="#about" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'about')}>
+          {t.navAbout}
         </a>
         <a href="#services" className="mobile-nav-item" onClick={(e) => handleNavClick(e, 'services')}>
           {t.navServices}

@@ -1,0 +1,238 @@
+.about-section {
+  padding: 100px 5% 80px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 30px;
+  margin-top: 40px;
+  align-items: stretch;
+}
+
+/* Left Card: About Content */
+.about-content-card {
+  padding: 40px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--glass-border);
+  background: var(--card-bg);
+  box-shadow: 0 10px 30px var(--shadow-color);
+  transition: var(--transition-smooth);
+}
+
+.about-content-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--glow-shadow);
+}
+
+.about-card-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.about-description {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+/* Stats Mini */
+.about-stats-mini {
+  display: flex;
+  gap: 30px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 30px;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mini-stat-num {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent-purple);
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mini-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Right Wrapper: Vision & Mission */
+.vision-mission-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+.vision-card,
+.mission-card {
+  padding: 30px;
+  border-radius: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: var(--transition-smooth);
+  border: 1px solid var(--glass-border);
+  background: var(--card-bg);
+}
+
+.vision-card:hover,
+.mission-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glow-shadow);
+}
+
+.card-header-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.purple-bg {
+  background: rgba(121, 40, 202, 0.1);
+  border: 1px solid rgba(121, 40, 202, 0.2);
+}
+
+.gold-bg {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.purple {
+  color: #a855f7;
+}
+
+.gold {
+  color: var(--accent-gold);
+}
+
+.card-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.card-info p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Core Values Section */
+.values-container {
+  margin-top: 80px;
+  text-align: center;
+}
+
+.values-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.value-card {
+  padding: 30px;
+  border-radius: 20px;
+  transition: var(--transition-smooth);
+  border: 1px solid var(--glass-border);
+  background: var(--card-bg);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--glow-shadow);
+}
+
+.value-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+}
+
+.value-card h4 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.value-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.turquoise {
+  color: var(--accent-turquoise);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 60px 20px 40px 20px;
+  }
+  
+  .about-content-card {
+    padding: 24px;
+  }
+  
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .about-stats-mini {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

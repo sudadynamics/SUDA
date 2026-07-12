@@ -14,6 +14,7 @@ import Testimonials from './components/Testimonials';
 import AIChatbot from './components/AIChatbot';
 import BrandSlider from './components/BrandSlider';
 import FAQ from './components/FAQ';
+import About from './components/About';
 import { translations } from './utils/translations';
 import './App.css';
 
@@ -34,6 +35,31 @@ function App() {
           parsed.en.testimonialsTitle = translations.en.testimonialsTitle;
           parsed.en.testimonialsSubtitle = translations.en.testimonialsSubtitle;
           parsed.en.testimonialsData = translations.en.testimonialsData;
+        }
+        // Defensively merge about section keys
+        if (parsed.tr && !parsed.tr.aboutTitle) {
+          parsed.tr.navAbout = translations.tr.navAbout;
+          parsed.tr.aboutTitle = translations.tr.aboutTitle;
+          parsed.tr.aboutSubtitle = translations.tr.aboutSubtitle;
+          parsed.tr.aboutText = translations.tr.aboutText;
+          parsed.tr.visionTitle = translations.tr.visionTitle;
+          parsed.tr.visionText = translations.tr.visionText;
+          parsed.tr.missionTitle = translations.tr.missionTitle;
+          parsed.tr.missionText = translations.tr.missionText;
+          parsed.tr.valuesTitle = translations.tr.valuesTitle;
+          parsed.tr.valuesData = translations.tr.valuesData;
+        }
+        if (parsed.en && !parsed.en.aboutTitle) {
+          parsed.en.navAbout = translations.en.navAbout;
+          parsed.en.aboutTitle = translations.en.aboutTitle;
+          parsed.en.aboutSubtitle = translations.en.aboutSubtitle;
+          parsed.en.aboutText = translations.en.aboutText;
+          parsed.en.visionTitle = translations.en.visionTitle;
+          parsed.en.visionText = translations.en.visionText;
+          parsed.en.missionTitle = translations.en.missionTitle;
+          parsed.en.missionText = translations.en.missionText;
+          parsed.en.valuesTitle = translations.en.valuesTitle;
+          parsed.en.valuesData = translations.en.valuesData;
         }
         return parsed;
       } catch (e) {
@@ -179,6 +205,8 @@ function App() {
         />
 
         <BrandSlider />
+
+        <About t={t} />
 
         <Services
           t={t}
